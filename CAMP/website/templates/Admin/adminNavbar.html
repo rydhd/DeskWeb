@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <!-- Specifies the character encoding for the HTML document (UTF-8 supports most characters globally) -->
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Ensures proper scaling and responsiveness on different screen sizes -->
+
+        <!-- Bootstrap CSS -->
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+            integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+            crossorigin="anonymous"
+        />
+        <!-- Font Awesome for icons -->
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+            crossorigin="anonymous"
+        />
+        <!-- Google Fonts - Lexend Deca -->
+        <link
+        href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap"
+        rel="stylesheet"
+        />
+
+        <title>{% block title %}Admin Home{% endblock %}</title>
+        <!-- Title block that can be overridden by child templates -->
+
+        <style>
+            /* Sidebar section styling */
+            .sidebar {
+                height: 100vh; /* Full height of the viewport */
+                width: 230px; /* Fixed sidebar width */
+                position: fixed; /* Sidebar stays in place while scrolling */
+                top: 0; /* Aligns the sidebar to the top of the page */
+                left: 0; /* Sidebar is aligned to the left of the page */
+                background-color: #8d0404; /* Dark red background color */
+                color: white; /* White text for visibility */
+                box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); /* Adds shadow for depth */
+                display: flex; /* Enables flexbox layout for its children */
+                flex-direction: column; /* Vertically stacks sidebar items */
+            }
+
+            /* Styles for sidebar links */
+            .sidebar a {
+                color: white; /* White text for links */
+                text-decoration: none; /* Removes underline from links */
+                display: block; /* Makes links occupy the full block width */
+            }
+
+            /* Main content section styling */
+            .main-content {
+                margin-left: 250px; /* Matches the sidebar width to align content next to it */
+                padding: 2rem; /* Adds inner spacing around the content */
+            }
+
+            .camp-text-logo{
+                width: 60%;
+                height: 60%;
+                margin-left: 45px;
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+
+            .camp-text-logo:hover{
+                scale: 1.1;
+                transition: 0.5s;
+            }
+
+
+            .admin-icon-container{
+                height:auto;
+                width: 100%;
+                text-align: center;
+
+            }
+
+            .admin-icon{
+                margin: auto;
+                
+            }
+
+            .dashboard2-icon{
+                margin-left: 0;
+            }
+
+            .admin-username{
+                font-size: 1rem;
+                font-weight: bold;
+                margin: auto;
+            }
+
+            .admin-role{
+                margin: auto;
+                margin-bottom: 60px; !important;
+            }
+
+            .dashboard2-icon{
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            .faculty-icon{
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            .courses-icon{
+                width: 100%;
+                margin-bottom: 100px;
+            }
+
+            .logout-icon{
+                width: 100%;
+
+            }
+
+             /* Modal styling */
+            .modal {
+                display: none; /* Hidden by default */
+                position: fixed; /* Fixed to viewport */
+                top: 0; /* Start at the top */
+                left: 0; /* Start at the left */
+                width: 100%; /* Cover full screen width */
+                height: 100%; /* Cover full screen height */
+                background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+                justify-content: center; /* Center content horizontally */
+                align-items: center; /* Center content vertically */
+                z-index: 1000; /* Ensure it's on top of other elements */
+            }
+
+            /* Content inside the modal */
+            .modal-content {
+                background-color: white; /* White background */
+                padding: 20px; /* Inner padding */
+                text-align: center; /* Centered text */
+                width: 300px; /* Fixed width */
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow effect */
+            }
+
+            /* Buttons container in the modal */
+            .modal-buttons {
+                display: flex; /* Flexbox layout */
+                justify-content: space-evenly; /* Evenly space buttons */
+                margin-top: 20px; /* Add space above */
+            }
+
+            /* Modal buttons (confirm and cancel) */
+            .modal-buttons button,
+            .modal-buttons a {
+                padding: 10px 20px; /* Button size */
+                border: none; /* No border */
+                border-radius: 6px; /* Rounded corners */
+                cursor: pointer; /* Pointer cursor */
+                font-size: 14px; /* Normal font size */
+                text-decoration: none; /* Remove underline for links */
+                text-align: center; /* Center text inside links */
+            }
+
+            /* Confirm button style */
+            .modal-buttons .confirm-button {
+                background-color: #8d0404; /* Dark red */
+                color: white; /* White text */
+            }
+
+            /* Cancel button style */
+            .modal-buttons .cancel-button {
+                background-color: #ddd; /* Light gray */
+                color: black; /* Black text */
+            }
+
+            /* Hover effect for cancel button */
+            .modal-buttons .cancel-button:hover {
+                background-color: #bbb; /* Slightly darker gray */
+            }
+
+            /* Hover effect for confirm button */
+            .modal-buttons .confirm-button:hover {
+                background-color: #5a1212; /* Darker red */
+            }
+
+        </style>
+    </head>
+    <body style="font-family: 'Lexend Deca', sans-serif;">
+        <!-- Sets the custom font for the entire page -->
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <a href="{{ url_for('admin.admin_dashboard') }}">
+                <!-- Custom link to the Admin Dashboard -->
+                <img src="{{ url_for('static', filename='camptextlogo.png') }}" alt="CAMP Logo" class="camp-text-logo"/>
+                <!-- Sidebar title displayed in the center -->
+            </a>
+
+            <!-- Admin Icon -->
+            <div class="admin-icon-container">
+                <img src="{{ url_for('static', filename='icon-admin.png') }}" alt="Admin Icon" class="admin-icon"/>
+
+                <!-- Display logged-in admin username -->
+                <div class="admin-username">{{ session['admin_username'] }}</div>
+                <div class="admin-role">Admin</div>
+
+            </div>
+
+            <div>
+                <a href="{{ url_for('admin.admin_dashboard') }}">
+                    <img src="{{ url_for('static', filename='dashboard2.png') }}" class="dashboard2-icon"/>
+                </a>
+
+                <a href="{{ url_for('admin.view_faculty') }}">
+                    <img src="{{ url_for('static', filename='faculty.png') }}" class="faculty-icon"/>
+                 </a>
+
+                <a href="{{ url_for('admin.view_courses') }}">
+                    <img src="{{ url_for('static', filename='courses.png') }}" class="courses-icon"/>
+                </a>
+
+                <a href="javascript:void(0);" onclick="openLogoutModal()">
+                    <img src="{{ url_for('static', filename='logout.png') }}" class="logout-icon" />
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content Section -->
+        <div class="main-content">
+            <!-- Child Template Content Section -->
+            <div class="container">
+                {% block content %}
+                <!-- A content block for child templates to override with their own page content -->
+                {% endblock %}
+            </div>
+        </div>
+
+        <!-- JavaScript Dependencies -->
+        <script
+            src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"
+        ></script>
+        <!-- jQuery is required by Bootstrap for interactivity -->
+
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"
+        ></script>
+        <!-- Popper.js is used for Bootstrap tooltips and popovers -->
+
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"
+        ></script>
+        <!-- Bootstrap's JavaScript file for interactive components -->
+
+        <script
+            type="text/javascript"
+            src="{{ url_for('static', filename='js/script.js') }}"
+        ></script>
+        <!-- Custom script included from the project's static folder -->
+    </body>
+
+    <!-- Logout Confirmation Modal -->
+<div id="logoutConfirmationModal" class="modal">
+    <div class="modal-content">
+        <p>Are you sure you want to log out?</p>
+        <div class="modal-buttons">
+            <button class="cancel-button" onclick="closeLogoutModal()">Cancel</button>
+            <a href="{{ url_for('auth.logout') }}" class="confirm-button">Log Out</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Open the logout confirmation modal
+    function openLogoutModal() {
+        document.getElementById('logoutConfirmationModal').style.display = 'flex';
+    }
+
+    // Close the logout confirmation modal
+    function closeLogoutModal() {
+        document.getElementById('logoutConfirmationModal').style.display = 'none';
+    }
+</script>
+
+</html>

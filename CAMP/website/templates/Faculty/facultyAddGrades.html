@@ -1,0 +1,275 @@
+{% extends "Faculty/facultyNavbar.html" %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #d9d9d9;
+    }
+
+    .container {
+        margin-left: 0;
+        margin-top: 1rem;
+    }
+
+    h3.text-left {
+        font-size: 2rem;
+        color: #8d0404;
+        font-weight: bold;
+    }
+
+    .table-responsive {
+        max-height: 650px;
+        overflow-y: auto;
+        width: 1200px;
+    }
+
+    .table {
+        table-layout: fixed;
+        border-collapse: collapse;
+        background-color: white; /* Set table background color to white */
+    }
+
+    .table-row {
+        background-color: white;
+        text-align: left;
+    }
+
+    .table thead {
+        background-color: #8d0404;
+        color: white;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+
+    .table thead th {
+        font-weight: normal; /* Make table headings not bold */
+    }
+
+    .table-bordered {
+        border: none;
+    }
+
+    .table-bordered th,
+    .table-bordered td {
+        border-left: none;
+        border-right: none;
+        border-top: 1px solid #dee2e6;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .table-responsive::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    .table-responsive::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb {
+        background-color: #8d0404;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb:hover {
+        background-color: #5a1212;
+    }
+
+    .form-control {
+        width: 100px;
+        text-align: center;
+        background-color: #f0f0f0; /* Set input fields to gray */
+        border: 1px solid #ccc; /* Add a light border for better visibility */
+    }
+
+    .form-control:focus {
+        background-color: #e6e6e6; /* Slightly darker gray when focused */
+        outline: none;
+        border-color: #8d0404; /* Highlight border with maroon color */
+    }
+
+    .submit-btn {
+        background-color: #8d0404;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+    .submit-btn:hover {
+        background-color: #5a1212;
+    }
+
+    .update-btn {
+        background-color: #ffc107;
+        color: black;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+    .update-btn:hover {
+        background-color: #e0a800;
+    }
+
+    .student-name-column {
+        width: 200px; /* Set the desired width */
+    }
+</style>
+
+<body>
+    <div class="container">
+        <h3 class="text-left">Add Grades</h3>
+        <div class="table-responsive mt-4">
+            <table class="table table-bordered text-center">
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th class="student-name-column">Student Name</th>
+                        <th>Written Works (Over 200) </th>
+                        <th>Final Project (Over 100) </th>
+                        <th>Examinations (Over 150) </th>
+                        <th>Raw Grade</th>
+                        <th>Final Grade</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if students %}
+                        {% for student in students %}
+                        <tr>
+                            <form method="POST" action="/faculty/submit_grades" onsubmit="console.log('Form is being submitted');">
+                                <td>AU00{{ student[0] }}</td> <!-- Student ID -->
+                                <td>{{ student[1] }}, {{ student[2] }} {{ student[3] }}</td> <!-- Student Name -->
+                                <td>
+                                    <input type="number" class="form-control written-works" name="written_works" 
+                                           value="{{ student[8] or '' }}" max="200" 
+                                           {% if student[8] is not none %}readonly{% endif %} required>
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control final-project" name="final_project" 
+                                           value="{{ student[9] or '' }}" max="100" 
+                                           {% if student[9] is not none %}readonly{% endif %} required>
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control exams" name="exams" 
+                                           value="{{ student[10] or '' }}" max="150" 
+                                           {% if student[10] is not none %}readonly{% endif %} required>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control raw-grade" name="raw_grade" 
+                                           value="{{ student[6] or '' }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control final-grade" name="final_grade" 
+                                           value="{{ student[7] or '' }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="hidden" name="student_id" value="{{ student[0] }}">
+                                    <input type="hidden" name="course_id" value="{{ course_id }}">
+                                    <input type="hidden" name="action" value="submit"> <!-- Default action is "submit" -->
+                                    {% if student[8] is not none and student[9] is not none and student[10] is not none %}
+                                        <button type="button" class="update-btn btn btn-warning" 
+                                                onclick="enableEditing(this)">Update</button>
+                                    {% else %}
+                                        <button type="submit" class="submit-btn btn btn-primary">Submit</button>
+                                    {% endif %}
+                                </td>
+                            </form>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="8">No students enrolled in your course.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+
+<script>
+    function enableEditing(button) {
+        // Prevent the default form submission
+        event.preventDefault();
+
+        const row = button.closest('tr');
+        const inputs = row.querySelectorAll('input[type="number"]');
+
+        // Enable editing for the input fields
+        inputs.forEach(input => input.removeAttribute('readonly'));
+
+        // Change the action to "update"
+        const actionInput = row.querySelector('input[name="action"]');
+        actionInput.value = 'update';
+        console.log("Action set to:", actionInput.value); // Debugging statement
+
+        // Change the button text and style
+        button.textContent = 'Submit';
+        button.classList.remove('btn-warning');
+        button.classList.add('btn-primary');
+        button.setAttribute('type', 'submit');
+        console.log("Button type changed to submit"); // Debugging statement
+
+        // Add a click event listener to force form submission
+        button.addEventListener('click', function () {
+            const form = row.querySelector('form');
+            form.submit();
+        });
+    }
+</script>
+
+<script>
+    document.querySelectorAll('tr').forEach(row => {
+        const writtenWorksInput = row.querySelector('.written-works');
+        const finalProjectInput = row.querySelector('.final-project');
+        const examsInput = row.querySelector('.exams');
+        const rawGradeInput = row.querySelector('.raw-grade');
+        const finalGradeInput = row.querySelector('.final-grade');
+
+        function calculateGrades() {
+            const writtenWorks = parseFloat(writtenWorksInput.value) || 0;
+            const finalProject = parseFloat(finalProjectInput.value) || 0;
+            const exams = parseFloat(examsInput.value) || 0;
+
+            const rawGrade = ((writtenWorks / 200) * 50) + ((finalProject / 100) * 30) + ((exams / 150) * 20);
+            rawGradeInput.value = rawGrade.toFixed(2);
+
+            let finalGrade;
+            if (rawGrade >= 98) finalGrade = 1.00;
+            else if (rawGrade >= 91) finalGrade = 1.25;
+            else if (rawGrade >= 85) finalGrade = 1.50;
+            else if (rawGrade >= 79) finalGrade = 1.75;
+            else if (rawGrade >= 73) finalGrade = 2.00;
+            else if (rawGrade >= 67) finalGrade = 2.25;
+            else if (rawGrade >= 61) finalGrade = 2.50;
+            else if (rawGrade >= 55) finalGrade = 2.75;
+            else if (rawGrade >= 50) finalGrade = 3.00;
+            else finalGrade = 5.00;
+
+            finalGradeInput.value = finalGrade.toFixed(2);
+        }
+
+        [writtenWorksInput, finalProjectInput, examsInput].forEach(input => {
+            input.addEventListener('input', calculateGrades);
+        });
+    });
+</script>
+
+<script>
+    // Prevent negative values and values exceeding the maximum
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+        input.addEventListener('input', function () {
+            const max = parseInt(this.getAttribute('max'), 10);
+            if (this.value < 0) {
+                this.value = 0; // Prevent negative values
+            } else if (this.value > max) {
+                this.value = max; // Prevent values exceeding the maximum
+            }
+        });
+    });
+</script>
+
+{% endblock %}

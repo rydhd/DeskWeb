@@ -1,0 +1,406 @@
+{% extends "Admin/adminNavbar.html" %}
+
+{% block title %}Admin Add Student{% endblock %}
+
+{% block content %}
+<style>
+    /* Sets the style for the body */
+    body {
+        background-color: #d9d9d9; /* Light gray background color for the page. */
+        margin-top: 30px; /* Moves the whole content downwards. */
+    }
+
+    /* Styles for the main heading */
+    h2 {
+        font-size: 2rem; /* Sets the font size to 2 rem. */
+        font-weight: bolder; /* Makes the text bold. */
+        color: #8d0404; /* Dark red text color. */
+        background-color: #d9d9d9; /* Matches the body background color. */
+        height: 50px; /* Sets a fixed height for the heading. */
+        margin-bottom: 0; /* Removes the default bottom margin. */
+    }
+
+    /* General container styling */
+    .container {
+        height: 550px; /* Sets a fixed height for the container. */
+        width: 100%; /* Makes the container span the full page width. */
+        max-width: 1200px; /* Limits the maximum width of the container. */
+        margin: 0 auto; /* Horizontally centers the container. */
+        padding: 0; /* Removes padding from the container. */
+        font-family: Lexend Deca, sans-serif; /* Applies a clean, modern font style. */
+        background-color: #8d0404; /* Sets background color to dark red. */
+    }
+
+    /* Title styling for section headings */
+    h6 {
+        font-size: 1.2rem; /* Medium font size for subsection headers. */
+        color: white; /* White text color for better contrast. */
+        font-weight: normal; /* Normal font weight for readability. */
+        text-align: left; /* Aligns text to the left. */
+        padding-top: 10px; /* Adds padding to the top of the title. */
+        margin-left: 10px; /* Adds margin to the left of the title for spacing. */
+    }
+
+    /* Styles for the form used in the page */
+    form {
+        height: 550px; /* Sets the height of the form to match the container. */
+        width: 100%; /* Makes the form take up full width of the container. */
+        max-width: 100%; /* Overrides any max-width to ensure full span. */
+        border: 0px solid #ddd; /* Removes any border. */
+        padding: 15px; /* Adds padding around the form elements. */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow under the form. */
+        display: flex; /* Enables a flex layout for form contents. */
+        flex-wrap: wrap; /* Allows form contents to wrap to the next row if necessary. */
+        gap: 0; /* Removes any spacing between flex items. */
+        background-color: #f8f9fa; /* Light gray background for the form. */
+        color: #8d0404; /* Dark red text color. */
+        padding-left: 50px; /* Adds left padding for alignment. */
+    }
+
+    /* Styles for individual form groups (label + input/textarea/select) */
+    .form-group {
+        display: flex; /* Enables flex layout. */
+        flex-direction: column; /* Arranges items in a vertical stack. */
+        flex: 1 1 calc(50% - 10px); /* Sets width to 50% minus the gap value. */
+    }
+
+    /* Styling for labels inside the form */
+    label {
+        margin-bottom: 0; /* Removes margin below the label text. */
+        font-size: 14px; /* Medium size for form labels. */
+        font-weight: bold; /* Bold to emphasize the label text. */
+    }
+
+    /* Shared styling for input, select, and textarea elements */
+    input, select, textarea {
+        width: 60%; /* Sets the width to 60% of its container. */
+        padding: 8px; /* Adds padding inside the fields for readability. */
+        margin: 0; /* Removes margin. */
+        border: 1px solid #ccc; /* Adds a light gray border. */
+        font-size: 14px; /* Medium font size. */
+        color: #8d0404; /* Dark red font color for consistency. */
+        line-height: 1.2; /* Sets line height for readability. */
+    }
+
+    /* Additional styling specifically for textareas */
+    textarea {
+        resize: vertical; /* Allows vertical resizing only. */
+    }
+
+    /* Focus styles to highlight active inputs, selects, or textareas */
+    input:focus, select:focus, textarea:focus {
+        border-color: #8d0404; /* Highlights the border with dark red. */
+        outline: #8d0404; /* Removes default outline and colors it dark red. */
+        box-shadow: 0 0 3px rgba(255, 0, 43, 0.8); /* Adds a subtle glowing effect. */
+    }
+
+    /* Styling for small helper/error text */
+    small {
+        color: #dc3545; /* Red color for error messages. */
+        font-size: 12px; /* Smaller text size for additional info. */
+    }
+
+    /* Styling for the buttons container */
+    .buttons {
+        padding-top: 550px; /* Adds spacing above buttons for positioning. */
+        padding-bottom: 40px; /* Adds spacing below buttons. */
+        padding-left: 0 !important; /* Ensures no padding on the left. */
+        margin-left: 1030px; /* Adjusts positioning for button alignment. */
+        position: absolute; /* Positions the container absolutely. */
+    }
+
+    /* General button styling */
+    .btn {
+        text-align: center; /* Centers the button text. */
+        padding: 5px; /* Adds padding within the button. */
+        border: none; /* Removes default border. */
+        border-radius: 4px; /* Rounds the edges slightly. */
+        font-size: 14px; /* Medium text size. */
+        cursor: pointer; /* Changes cursor to a pointer on hover. */
+        text-decoration: none; /* Removes underline on text. */
+        margin-top: 10px; /* Adds margin above the button. */
+        position: relative; /* Adjusts relative to its container. */
+        left: 0; /* Aligns the button to the left edge. */
+    }
+
+    /* Alternate styling for the second type of buttons */
+    .btn2 {
+        text-align: center; /* Centers the button text. */
+        padding: 8px; /* Adds generous padding inside. */
+        border: none; /* Removes default border. */
+        border-radius: 4px; /* Slightly rounded corners. */
+        font-size: 15px; /* Slightly larger font size. */
+        font-weight: bold; /* Makes the button text bold. */
+        color: #f8f9fa; /* White text color. */
+        cursor: pointer; /* Pointer cursor on hover. */
+        text-decoration: none; /* Removes underlines. */
+        float: right; /* Aligns the button to the right side. */
+        position: relative; /* Relative positioning for fine-tuning. */
+        top: 2px; /* Slightly moves the button down. */
+        right: 20px; /* Slightly moves the button to the right. */
+        background-color: #8d0404; /* Dark red background. */
+        font-family: Lexend Deca, sans-serif; /* Applies clean font styling. */
+    }
+
+    /* Hover effect for the second button */
+    .btn2:hover {
+        color: white; /* Keeps text color white. */
+        text-decoration: none; /* Ensures no underline appears. */
+    }
+
+    /* Primary button styling */
+    .btn-primary {
+        width: 120px; /* Fixed width for consistent sizing. */
+        background-color: #8d0404; /* Dark red background. */
+    }
+
+    /* Focus effect for primary buttons */
+    .btn-primary:focus {
+        outline: none; /* Removes default focus outline. */
+        box-shadow: 0 0 3px rgba(141, 4, 4, 0.8); /* Dark red glowing effect. */
+        border-color: #8d0404; /* Highlights the border with dark red. */
+    }
+
+    /* Hover effect for primary buttons */
+    .btn-primary:hover {
+        background-color: #ffffff; /* Changes background to white. */
+        color: #8d0404; /* Sets text to dark red. */
+        border: 1px solid #8d0404; /* Adds a dark red border. */
+    }
+
+    /* Grid layout for aligned items */
+    .grid-items {
+        display: grid; /* Enables grid layout. */
+        grid-template-columns: 1fr 1fr; /* Creates two equal-width columns. */
+        position: relative; /* Relative positioning for fine-tuning. */
+        left: -228px; /* Slightly shifts the grid left. */
+        grid-column-gap: 40px; /* Adds spacing between the columns. */
+    }
+
+    /* Overrides specific IDs for consistent field size */
+    #address {
+        width: 345px; /* Wider text area for address input. */
+        height: 110px; /* Expand the height of input field */
+    }
+
+    #birthdate {
+        width: 150px; /* Sets a narrower width for date input fields. */
+    }
+
+    #religion {
+        width: 150px; /* Consistent width for religion input fields. */
+    }
+
+    #username {
+        width: 150px; /* Narrower width for username field. */
+    }
+
+    #password {
+        width: 150px; /* Fixed width for password field for layout consistency. */
+    }
+
+    /* Notification styling */
+    .notification {
+        position: fixed; /* Fix the position */
+        top: 10px; /* Set top position */
+        right: 10px; /* Set right position */
+        background-color: #28a745; /* Green background for success */
+        color: white; /* White text color */
+        padding: 15px; /* Add padding */
+        border-radius: 5px; /* Round the corners */
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Add shadow */
+        font-size: 14px; /* Set font size */
+        z-index: 1000; /* Ensure it appears above other content */
+        opacity: 1; /* Set opacity */
+        transition: opacity 0.5s ease; /* Smooth transition for opacity */
+    }
+
+</style>
+<body>
+<div class="title">
+    <h2>ADMIT A STUDENT</h2>
+</div>
+<a href="{{ url_for('admin.admin_dashboard') }}" class="btn2 btn-close">
+            x
+    </a>
+<div class="container">
+    <h6>STUDENT DETAILS</h6>
+
+    <form method="POST" onsubmit="return validateForm()">
+    <!-- First column -->
+    <div class="form-group">
+        <label for="first_name">First Name:</label>
+        <input type="text" id="first_name" name="first_name" required>
+    </div>
+
+    <div class="form-group">
+        <label for="citizenship">Citizenship:</label>
+        <input type="text" id="citizenship" name="citizenship" oninput="validateForm()">
+        <small id="citizenshipError"></small>
+    </div>
+    
+    <div class="form-group">
+        <label for="middle_name">Middle Name:</label>
+        <input type="text" id="middle_name" name="middle_name">
+    </div>
+
+    <div class="form-group">
+        <label for="lrn">Learner Reference Number (LRN):</label>
+        <input type="text" id="lrn" name="lrn" pattern="\d{12}" title="LRN must be exactly 12 digits" maxlength="12">
+    </div>
+
+    <div class="form-group">
+        <label for="last_name">Last Name:</label>
+        <input type="text" id="last_name" name="last_name" required>
+    </div>
+
+    <div class="form-group">
+        <label for="phone_number">Phone Number:</label>
+        <input type="text" id="phone_number" name="phone_number" pattern="\d{11}" title="Phone number must be exactly 11 digits" maxlength="11">
+    </div>
+
+    <div class="form-group">
+        <label for="sex">Sex:</label>
+        <select id="sex" name="sex" required>
+            <option value="">Select</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="emailadd">Email Address:</label>
+        <input type="email" id="emailadd" name="emailadd" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" title="Enter a valid email address">
+    </div>
+
+    <div class="form-group">
+        <label for="address">Address:</label>
+        <textarea id="address" name="address"></textarea>
+    </div>
+
+    <!-- Second column -->
+    <div class="grid-items">
+    <div class="form-group">
+        <label for="birthdate">Birthdate:</label>
+        <input type="date" id="birthdate" name="birthdate">
+    </div>
+
+    <!-- Religion and Password moved here -->
+    <div class="form-group">
+        <label for="religion">Religion:</label>
+        <input type="text" id="religion" name="religion">
+    </div>
+
+    <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required maxlength="50">
+    </div>
+
+    <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required maxlength="10">
+    </div>
+    </div>
+
+        <div class="buttons">
+            <button type="submit" class="btn btn-primary">Admit</button>
+        </div>
+</form>
+
+</div>
+</body>
+
+<script>
+    // Validates the form before submission
+    function validateForm() {
+        let citizenship = document.getElementById("citizenship").value.trim();
+        let phone = document.getElementById("phone_number").value.trim();
+        let lrn = document.getElementById("lrn").value.trim();
+        let birthdate = document.getElementById("birthdate").value.trim();
+
+        // Validate citizenship (should not contain numbers)
+        if (citizenship && /\d/.test(citizenship)) {
+            alert("Citizenship should not contain numbers.");
+            return false;
+        }
+
+        // Validate phone number (must be exactly 11 digits)
+        if (phone && !/^\d{11}$/.test(phone)) {
+            alert("Phone number must be exactly 11 digits.");
+            return false;
+        }
+
+        // Validate LRN (must be exactly 12 digits)
+        if (lrn && !/^\d{12}$/.test(lrn)) {
+            alert("LRN must be exactly 12 digits.");
+            return false;
+        }
+
+        // Validate birthdate (must make the student at least 18 years old)
+        if (birthdate) {
+            const today = new Date();
+            const birthDateObj = new Date(birthdate);
+
+            // Calculate the age
+            let age = today.getFullYear() - birthDateObj.getFullYear();
+            const monthDiff = today.getMonth() - birthDateObj.getMonth();
+            const dayDiff = today.getDate() - birthDateObj.getDate();
+
+            // Adjust age if the current month/day is before the birth month/day
+            if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+                age--;
+            }
+
+            if (age < 18) {
+                alert("The student must be at least 18 years old.");
+                return false;
+            }
+        }
+
+        return true; // Allow form submission if all validations pass
+    }
+</script>
+
+<script>
+    // Function to show a success notification
+    function showSuccessNotification(message) {
+        const notification = document.createElement('div'); // Create a new div for the notification
+        notification.className = 'notification'; // Add the notification class
+        notification.textContent = message; // Set the notification message
+        document.body.appendChild(notification); // Append the notification to the body
+
+        // Automatically remove the notification after 5 seconds
+        setTimeout(() => {
+            notification.remove(); // Remove the notification
+        }, 5000);
+    }
+
+    // Call this function after successful form submission
+    async function handleFormSubmission(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        if (validateForm()) {
+            showSuccessNotification('Student has been admitted successfully!');
+
+            // Simulate form submission via AJAX (or use fetch/axios for real submission)
+            const formData = new FormData(event.target); // Collect form data
+            const response = await fetch(event.target.action, {
+                method: event.target.method,
+                body: formData,
+            });
+
+            if (response.ok) {
+                // Redirect after showing the success message
+                setTimeout(() => {
+                    window.location.reload(); // Reload the page or redirect to another page
+                }, 5000); // Delay the redirect to allow the notification to stay visible
+            } else {
+                alert('An error occurred while admitting the student. Please try again.');
+            }
+        }
+    }
+
+    // Attach the form submission handler
+    document.querySelector('form').addEventListener('submit', handleFormSubmission);
+</script>
+{% endblock %}

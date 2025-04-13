@@ -1,0 +1,373 @@
+{% extends "Admin/adminNavbarFaculty.html" %}  <!-- Extend the template "adminNavbarFaculty.html" to reuse the shared layout -->
+
+{% block title %}Admin View Faculty{% endblock %}
+
+{% block content %}  <!-- Start the "content" block, allowing for custom content insertion within the extended template -->
+
+<style>
+    body {
+        background-color: #d9d9d9;  /* Set the background color of the web page to light gray */
+    }
+
+    .container {
+        margin-left: 0;  /* Align the container to the left edge of the page */
+        margin-top: 1rem;  /* Add a top margin of 1rem to the container */
+    }
+
+    h3.text-left {
+        font-size: 2rem;  /* Set the font size for the heading */
+        color: #8d0404;  /* Change the text color to maroon */
+        font-weight: bold;  /* Make the text bold */
+    }
+
+    .table-responsive {
+        max-height: 800px;  
+        overflow-y: auto;  /* Enable vertical scrolling when content exceeds the max height */
+        width: 1500px;  /* Set a fixed width for the table container */
+    }
+
+    .table {
+        table-layout: fixed;  /* Ensure cells have fixed widths */
+        border-collapse: collapse;  /* Collapse table borders into one */
+    }
+
+    .table-row {
+        background-color: white;  /* Set the background color of table rows to white */
+        text-align: left;  /* Align text to the left in each row */
+    }
+
+    .table thead {
+        background-color: #8d0404;  /* Set the background color of the table header */
+        color: white;  /* Set the text color in the table header to white */
+        position: sticky;  /* Make the header row stick to the top during scrolling */
+        top: 0;  /* Set the position of the sticky header to the top */
+        z-index: 1;  /* Ensure the header appears above other content */
+    }
+
+    .table-bordered {
+        border: none; /* Removes the border around the table */
+    }
+
+    .table-bordered th,
+    .table-bordered td {
+        border-left: none; /* Remove the vertical borders */
+        border-right: none; /* Remove the vertical borders */
+        border-top: 1px solid #dee2e6; /* Keep horizontal borders */
+        border-bottom: 1px solid #dee2e6; /* Keep horizontal borders */
+    }
+
+    .table-responsive::-webkit-scrollbar {
+        width: 10px;  /* Set the width of the scrollbar */
+        height: 10px;  /* Set the height of the scrollbar */
+    }
+
+    .table-responsive::-webkit-scrollbar-track {
+        background: transparent;  /* Make the scrollbar track transparent */
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb {
+        background-color: #8d0404;  /* Set scrollbar thumb color to maroon */
+
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb:hover {
+        background-color: #5a1212;  /* Change the scrollbar thumb color to a darker maroon on hover */
+    }
+
+    .view-student-link {
+        color: black;  /* Set the link color to black by default */
+        text-decoration: none;  /* Remove the underline styling from the link */
+        cursor: pointer;  /* Change the cursor to a pointer to show link is clickable */
+    }
+
+    .view-student-link:hover {
+        text-decoration: underline;  /* Add an underline when the link is hovered */
+        color: #8d0404;  /* Change link color to maroon when hovered */
+    }
+
+    .name {
+        font-weight: normal; /* Set the font into normal weight */
+        width: 25%;  /* Set column width for the "name" column */
+    }
+
+    .fac-id {
+        font-weight: normal; /* Set the font into normal weight */
+        width: 20%;  /* Set column width for the "faculty ID" column */
+    }
+
+    .courses {
+        font-weight: normal; /* Set the font into normal weight */
+        width: 30%;  /* Set column width for the "courses" column */
+    }
+
+    .action {
+        font-weight: normal; /* Set the font into normal weight */
+        width: 20%;  /* Set column width for the "action" column */
+    }
+
+    .add-faculty-btn {
+        background-color: white;  /* Set button background to white */
+        color: #8d0404;  /* Set the button text color to maroon */
+        border: 1px solid;  /* Add a border to the button */
+        padding: 10px 20px;  /* Add padding for better appearance */
+        font-size: 0.9rem;  /* Set a slightly smaller font size for the button text */
+        cursor: pointer;  /* Show a pointer cursor when hovering over the button */
+    }
+
+    .add-faculty-btn:hover {
+        color: white;  /* Change text color to white on hover */
+        background-color: #5a1212;  /* Set button background to a darker maroon on hover */
+    }
+
+    .add-faculty-container {
+        margin-left: 15px;  /* Add a margin to the left of the button container */
+        margin-top: 1rem;  /* Add space above the button */
+        display: flex;  /* Use flexbox for alignment */
+        justify-content: flex-start;  /* Align the button to the left */
+    }
+    .modal-faculty {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .modal-content-faculty {
+        background-color: #fff;;
+        width: 800px;
+        height: 300px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .title {
+        width: 100%;
+        padding: 3px;
+        background-color: #8d0404;
+        font-weight: bold;
+        color: white;
+        font-size: 1.5rem;
+        padding-top: 15px;
+        padding-left: 30px;
+        padding-bottom: 5px;
+    }
+
+    .btn2-faculty {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #8d0404;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .add-faculty-btn-modal {
+        background-color: #8d0404;
+        color: white;
+        border: 1px solid;
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        position:absolute;
+        top: 245px;
+        left: 624px;
+    }
+
+    .add-faculty-btn-modal:hover {
+        background-color: #5a1212;
+    }
+
+    /* Form styles */
+    .form-row {
+        display: flex; /* Aligns elements inside the form row horizontally */
+        justify-content: space-between; /* Distributes the space evenly between columns */
+    }
+
+    .form-column {
+        flex: 1; /* Equalizes the width of the columns */
+        display: flex; /* Aligns elements within the column using flexbox */
+        flex-direction: column; /* Arranges the column elements vertically */
+        margin-left: 30px;
+        margin-right: 40px;
+    
+    }
+
+    .form-group {
+        display: flex; /* Aligns label and input field horizontally */
+        align-items: center; /* Vertically centers the label and input */
+        margin-bottom: 15px; /* Adds spacing between groups */
+        color: #8d0404;
+    }
+
+
+
+    label {
+        margin-right: 5px; /* Adds space between label and input field */
+        width: 120px; /* Ensures all labels have the same width for consistent alignment */
+        font-size: 14px;
+        font-weight: bold;
+        text-align: left; /* Aligns the text label to the right */
+    }
+
+    input, select {
+        flex: 1; /* Allows input field or dropdown to take up remaining space */
+        padding: 8px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        color: #8d0404;
+    }
+
+    input:focus, select:focus {
+        border-color: #8d0404; /* Changes border color to dark red on focus */
+        outline: none;
+        box-shadow: 0 0 3px rgba(255, 0, 43, 0.8); /* Adds a subtle red shadow for focus indication */
+    }
+
+</style>
+
+<div class="container">  <!-- Main container for the content -->
+    <h3 class="text-left">FACULTY MEMBERS</h3>  <!-- Page heading -->
+    {% if faculty_details %}  <!-- Check if there are faculty details available -->
+    <div class="table-responsive mt-4">  <!-- Table container with responsive and scrollable layout -->
+        <table class="table table-bordered text-center">  <!-- A bordered and centered table -->
+            <thead>  <!-- Table header -->
+                <tr>  <!-- Table row for column headers -->
+                    <th class="name" style="text-align: left; padding-left: 40px">Name</th>  <!-- Column header for "Name" -->
+                    <th class="fac-id" style="text-align: left; padding-left: 40px">Faculty ID</th>  <!-- Column header for "Faculty ID" -->
+                    <th class="courses" style="text-align: left">Course</th>  <!-- Column header for "Courses" -->
+                    <th class="action" style="text-align: left">Action</th>  <!-- Column header for "Action" -->
+                </tr>
+            </thead>
+            <tbody>  <!-- Table body to display faculty details -->
+                {% for faculty in faculty_details %}  <!-- Loop over the faculty details -->
+                <tr class="table-row">  <!-- Row for each faculty member -->
+                    <td style="padding-left: 40px">{{ faculty[1] }}</td>  <!-- Display the faculty member's name -->
+                    <td  style="padding-left: 40px">AUOO{{ faculty[0] }}</td>  <!-- Display the faculty member's ID with a prefix -->
+                    {% if faculty[2] %}
+                        <td>{{ faculty[2] }}</td>  <!-- Display the faculty member's courses or "None" if no courses -->
+                    {% else %}
+                        <td class="text-muted"> None </td>
+                    {% endif %}
+                    
+                    <td>
+                        {% if faculty[2] %}  <!-- Check if the faculty has a course assigned -->
+                            <a href="{{ url_for('admin.view_student_list', course_id=faculty[0]) }}" class="view-student-link">View Students</a>
+                        {% else %}
+                            <span class="text-muted">No Course Assigned</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}  <!-- End the loop -->
+            </tbody>
+        </table>
+    </div>
+    {% else %}  <!-- If no faculty details are found -->
+    <p class="text-center mt-3 text-danger">No faculty members found.</p>  <!-- Display message indicating no faculty members -->
+    {% endif %}  <!-- End the conditional check -->
+</div>
+
+<div class="add-faculty-container">  <!-- Add Faculty button container -->
+    <button class="add-faculty-btn" onclick="showAddFacultyModal()">Add Faculty Member</button>  <!-- Button to trigger the modal -->
+</div>
+
+<!-- Modal for Add Faculty -->
+<div id="addFacultyModal" class="modal-faculty" style="display: none;">
+    <div class="modal-content-faculty">
+        <div class="title">
+            <h2>ADD FACULTY</h2> <!-- Title heading for the Add Faculty Modal -->
+        </div>
+        <button class="btn2-faculty" onclick="closeAddFacultyModal()">x</button> <!-- Close button -->
+        <div class="container">
+            <form method="POST" action="{{ url_for('admin.add_faculty') }}" onsubmit="return validateFormFaculty()"> <!-- Form submission via POST -->
+                <div class="form-row">
+                    <!-- Left Column -->
+                    <div class="form-column">
+                        <div class="form-group">
+                            <label for="first_name">First Name:</label>
+                            <input type="text" id="first_name" name="first_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="middle_name">Middle Name:</label>
+                            <input type="text" id="middle_name" name="middle_name">
+                        </div>
+                        <div class="form-group">
+                            <label for="last_name">Last Name:</label>
+                            <input type="text" id="last_name" name="last_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" 
+                                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" 
+                                   title="Please enter a valid email address" required>
+                        </div>
+                    </div>
+                    <!-- Right Column -->
+                    <div class="form-column">
+                        <div class="form-group">
+                            <label for="phone_number">Phone Number:</label>
+                            <input type="text" id="phone_number" name="phone_number" maxlength="11" 
+                                   pattern="\d{11}" title="Phone number must be exactly 11 digits" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Username:</label>
+                            <input type="text" id="username" name="username" required maxlength="50">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password:</label>
+                            <input type="password" id="password" name="password" required maxlength="10">
+                        </div>
+                    </div>
+                </div>
+                <div class="add-faculty-container">
+                    <button type="submit" class="add-faculty-btn-modal">Add Faculty</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Show the modal
+    function showAddFacultyModal() {
+        document.getElementById("addFacultyModal").style.display = "flex";
+    }
+
+    // Close the modal
+    function closeAddFacultyModal() {
+        document.getElementById("addFacultyModal").style.display = "none";
+    }
+
+    // Validate the form
+    function validateFormFaculty() {
+        const phoneNumber = document.getElementById("phone_number").value;
+        const email = document.getElementById("email").value;
+
+        // Validate phone number (must be exactly 11 digits)
+        if (phoneNumber && !/^\d{11}$/.test(phoneNumber)) {
+            alert("Phone number must be exactly 11 digits.");
+            return false;
+        }
+
+        // Validate email format
+        const emailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+        if (email && !emailPattern.test(email)) {
+            alert("Please enter a valid email address.");
+            return false;
+        }
+
+        return true; // Allow form submission if all validations pass
+    }
+</script>
+
+{% endblock %}  <!-- End the "content" block -->

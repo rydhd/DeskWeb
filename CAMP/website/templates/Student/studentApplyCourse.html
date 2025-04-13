@@ -1,0 +1,523 @@
+{% extends "Student/studentNavbarCourses.html" %}
+
+{% block title %}Student Apply Course{% endblock %}
+
+{% block content %}
+
+<style>
+    /* Set the background color of the page to a light gray */
+    body {
+        background-color: #d9d9d9;
+    }
+
+    /* Style the main container of the page */
+    .container {
+        margin-top: 1rem; /* Add spacing from the top */
+        margin-right: 50rem; /* Add spacing from the right */
+        position: relative; /* Allow positioning of elements inside this container */
+    }
+
+    /* Styling the "x" text for navigation */
+    .back-button {
+        position: absolute; /* Position the button in the container */
+        top: 3.7rem; /* Move it slightly above the container */
+        left: 65.5rem; /* Align it slightly to the left */
+        font-size: 1.8rem; /* Set a larger font for visibility */
+        font-weight: normal; /* Make the "x" a normal weight */
+        color: white; /* White color matching the theme */
+        text-decoration: none; /* Remove underline */
+        cursor: pointer; /* Change cursor to pointer on hover */
+        transition: transform 0.2s ease; /* Add a smooth scaling effect */
+        z-index: 1; /* Ensure the header appears above other content */
+    }
+
+    .back-button:hover {
+        text-decoration: none; /* Remove underline on hover */
+        color: white; /* Keep the color white on hover */
+    }
+
+    /* Make the table responsive by limiting its height and enabling scrolling */
+    .table-responsive {
+        max-height: 400px; /* Limit the height of the table */
+        overflow-y: auto; /* Add scrollbars if content exceeds the height */
+        width: 100% ; /* Make the table span the full width */
+        background-color: white; /* Set the table background to white */
+    }
+
+    .table-responsive::-webkit-scrollbar {
+        width: 10px; /* Set the width of the scrollbar */
+        height: 10px; /* Set the height of the scrollbar */
+    }
+
+    .table-responsive::-webkit-scrollbar-track {
+        background-color: #d9d9d9; /* Make the scrollbar track transparent */
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb {
+        background-color: #8d0404; /* Set scrollbar thumb color to maroon */
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb:hover {
+        background-color: #5a1212; /* Change the scrollbar thumb color to a darker maroon on hover */
+    }
+
+    /* Style the table within the container */
+    .table {
+        table-layout: fixed; /* Ensure the table's fixed layout for consistency */
+        border-collapse: collapse; /* Remove gaps between cells */
+        width: 100%; /* Make the table span the full width of the container */
+    }
+
+    /* Style the header of the table (thead) */
+    .table thead {
+        background-color: #8d0404; /* Use a dark red background color */
+        color: white; /* Set the text color to white for contrast */
+        position: sticky; /* Make the header row stick to the top during scrolling */
+        top: 0; /* Set the position of the sticky header to the top */
+    }
+
+    /* Set uniform padding, border, and alignment for table cells */
+    .table th, .table td {
+        padding: 0.5rem; /* Add spacing inside the table cells */
+        text-align: left; /* Align text to the left */
+        border: 1px solid #ddd; /* Define a light border between cells */
+        font-weight: normal; /* Set normal font weight */
+    }
+
+    .table-bordered th,
+    .table-bordered td {
+        border-left: none; /* Remove the vertical borders */
+        border-right: none; /* Remove the vertical borders */
+        border-top: 1px solid #dee2e6; /* Keep horizontal borders */
+        border-bottom: 1px solid #dee2e6; /* Keep horizontal borders */
+    }
+
+    /* Ensure table cells align vertically to the middle */
+    .table td {
+        vertical-align: middle; /* Align content vertically to the middle */
+    }
+
+    /* Add a hover effect to rows for better user experience */
+    .table tbody tr {
+        transition: background-color 0.3s; /* Smooth transition for row hover */
+    }
+
+    /* Highlight row on hover */
+    .table tbody tr:hover {
+        background-color: #f0f0f0; /* Light gray background on hover */
+    }
+
+    /* Center content in the "Action" column and set its width */
+    .table-select {
+        text-align: center; /* Center align the content */
+        width: 20%; /* Define the column width */
+    }
+
+    /* Style for the message displayed when no courses are available */
+    .no-courses {
+        margin-top: 2rem; /* Add margin above the message */
+        font-size: 1.2rem; /* Make the text slightly larger */
+        font-weight: bold; /* Bolden the text */
+        color: #dc3545; /* Use a red color for highlighting */
+        text-align: center; /* Center align the message */
+    }
+
+    /* Define the style for the "Select" button */
+    .btn-select {
+        background-color: #8d0404; /* Dark red background color */
+        color: white; /* White text for contrast */
+        border: none; /* Remove borders */
+        padding: 0.3rem; /* Add padding inside the button */
+        border-radius: 15px; /* Round the button corners */
+        cursor: pointer; /* Change the cursor to a pointer on hover */
+        transition: background-color 0.3s ease; /* Smooth hover effect transition */
+        font-size: 15px; /* Set font size */
+        width: 100px; /* Set button width */
+    }
+
+    /* Change the button color on hover */
+    .btn-select:hover {
+        background-color: #670303; /* Darker red background on hover */
+    }
+
+    .btn-select[disabled] {
+        background-color: #ccc; /* Light gray background for disabled state */
+        cursor: not-allowed; /* Indicate the button is not clickable */
+        color: #6c757d; /* Slightly dimmed text color */
+    }
+
+    /* Style for the second table of selected courses */
+    .scrollable-table {
+        max-height: 200px; /* Fixed height for the selected courses table */
+        overflow-y: auto; /* Allow vertical scrolling */
+    }
+
+    .selected-table th,
+    .selected-table td {
+        padding: 0.5rem; /* Add consistent padding */
+        text-align: left; /* Align text to the left */
+        border: 1px solid #ddd; /* Light border for structure */
+    }
+
+    .selected-table th {
+        background-color: #8d0404; /* Match the header background color */
+        color: white; /* Set text color to white */
+    }
+
+    .btn-confirm {
+        margin-top: 1rem; /* Add margin above the button */
+        margin-left: 920px; /* Add margin to the left */
+        background-color: #8d0404; /* Dark red background color */
+        color: white; /* White text for contrast */
+        border: none; /* Remove borders */
+        padding: 5px 10px; /* Add padding inside the button */
+        border-radius: 15px; /* Round the button corners */
+        cursor: pointer; /* Change the cursor to a pointer on hover */
+        font-size: 0.9rem; /* Set font size */
+        font-weight: normal; /* Set normal font weight */
+    }
+
+    .btn-confirm:hover {
+        background-color: #670303; /* Darker red background on hover */
+    }
+
+    .notification {
+        position: fixed; /* Fix the position */
+        top: 10px; /* Set top position */
+        right: 10px; /* Set right position */
+        background-color: #dc3545; /* Red background color */
+        color: white; /* White text color */
+        padding: 15px; /* Add padding */
+        border-radius: 5px; /* Round the corners */
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Add shadow */
+        font-size: 14px; /* Set font size */
+        z-index: 1000; /* Ensure it appears above other content */
+        opacity: 1; /* Set opacity */
+        transition: opacity 0.5s ease; /* Smooth transition for opacity */
+    }
+
+    .modal {
+        display: none; /* Hide by default */
+        position: fixed; /* Fix the position */
+        top: 0; /* Set top position */
+        left: 0; /* Set left position */
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+        z-index: 1000; /* Ensure it appears above other content */
+    }
+
+    .modal-content {
+        background-color: white; /* White background color */
+        padding: 20px; /* Add padding */
+        text-align: center; /* Center align text */
+        width: 300px; /* Set width */
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Add shadow */
+    }
+
+    .modal-buttons {
+        display: flex; /* Use flexbox */
+        justify-content: space-evenly; /* Space buttons evenly */
+        margin-top: 20px; /* Add margin above the buttons */
+    }
+
+    .modal-buttons button {
+        padding: 10px 20px; /* Add padding */
+        border: none; /* Remove borders */
+        border-radius: 6px; /* Round the corners */
+        cursor: pointer; /* Change the cursor to a pointer on hover */
+        font-size: 14px; /* Set font size */
+    }
+
+    .modal-buttons .confirm-button {
+        background-color: #8d0404; /* Dark red background color */
+        color: white; /* White text color */
+    }
+
+    .modal-buttons .cancel-button {
+        background-color: #ddd; /* Light gray background color */
+        color: black; /* Black text color */
+    }
+
+    .modal-buttons .cancel-button:hover {
+        background-color: #bbb; /* Darker gray background on hover */
+    }
+
+    .modal-buttons .confirm-button:hover {
+        background-color: #5a1212; /* Darker red background on hover */
+    }
+
+    .trash-icon {
+        width: 20px; /* Adjust the width of the icon */
+        height: 20px; /* Adjust the height of the icon */
+        cursor: pointer; /* Show the pointer cursor on hover */
+        transition: transform 0.2s ease; /* Smooth hover effect */
+    }
+
+    .trash-icon:hover {
+        transform: scale(1.2); /* Slightly enlarge the icon on hover */
+    }
+
+    .grayed-out {
+        background-color: #e0e0e0; /* Light gray background for selected courses */
+        color: #a0a0a0; /* Light gray text color for selected courses */
+    }
+
+    .grayed-out button {
+        background-color: #ccc; /* Light gray background for selected course buttons */
+        cursor: not-allowed; /* Disable the cursor for selected course buttons */
+        color: #6c757d; /* Slightly dimmed text color for selected course buttons */
+    }
+</style>
+
+<div class="container">
+    <!-- Add the "x" back button -->
+    <a href="{{ url_for('student.student_courses') }}" class="back-button">x</a>
+
+    <!-- Page heading for the course application -->
+    <h2 class="text-left mb-4" style="color: #8d0404; font-weight: bold;">COURSE APPLICATION</h2>
+
+    {% if courses and courses|length > 0 %}
+    <!-- Responsive table to display available courses -->
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Course Name</th>
+                    <th>Assigned Professor</th>
+                    <th class="table-select"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in courses %}
+                <tr class="{% if course.course_id in enrolled_courses %}grayed-out{% endif %}">
+                    <td class="course-name">{{ course.course_name }}</td>
+                    <td class="professor-name">{{ course.assigned_professor }}</td>
+                    <td class="table-select">
+                        {% if course.course_id in enrolled_courses %}
+                        <!-- If course is already enrolled, disable button -->
+                        <button type="button" class="btn-select" disabled style="background-color: #ccc; cursor: not-allowed;">
+                            Enrolled
+                        </button>
+                        {% else %}
+                        <!-- Otherwise, allow selection -->
+                        <button type="button" class="btn-select"
+                                data-course-id="{{ course.course_id }}"
+                                data-course-name="{{ course.course_name }}"
+                                data-professor-name="{{ course.assigned_professor }}">
+                            Select
+                        </button>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Table for displaying selected courses -->
+    <div class="table-responsive scrollable-table" style="margin-top: 2rem; max-height: 200px; overflow-y: auto;">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Selected Course</th>
+                    <th></th>
+                    <th width="20%"></th>
+                </tr>
+            </thead>
+            <tbody id="selectedTableBody">
+                <!-- Automatic na maga-add ang mga selected course -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Confirm Application Button -->
+    <button class="btn-confirm" id="confirmApplication">Confirm Application</button>
+
+    {% else %}
+    <!-- Message when no courses are available -->
+    <div class="no-courses">
+        No courses are available for application at the moment.
+    </div>
+    {% endif %}
+</div>
+
+<!-- Notification Container -->
+<div id="notification-container"></div>
+
+<!-- Confirmation Modal -->
+<div id="confirmation-modal" class="modal">
+    <div class="modal-content">
+        <p>Do you want to confirm your application?</p>
+        <div class="modal-buttons">
+            <button id="confirm-modal-no" class="cancel-button">Cancel</button>
+            <button id="confirm-modal-yes" class="confirm-button">Confirm</button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const MAX_COURSES = 8; // Maximum number of courses a student can enroll in
+        const enrolledCount = {{ enrolled_count }}; // Number of already enrolled courses (provided from the backend)
+        let selectedCourses = []; // Array to store selected courses
+        const selectedTableBody = document.getElementById('selectedTableBody'); // Table body for selected courses
+        const confirmButton = document.getElementById('confirmApplication'); // Confirm application button
+        const modal = document.getElementById('confirmation-modal'); // Confirmation modal
+        const notificationContainer = document.getElementById('notification-container'); // Container for notifications
+
+        // Function to show a notification
+        function showNotification(message) {
+            const notification = document.createElement('div'); // Create a new div for the notification
+            notification.className = 'notification'; // Add the notification class
+            notification.textContent = message; // Set the notification message
+            notificationContainer.appendChild(notification); // Append the notification to the container
+
+            // Automatically remove the notification after 3 seconds
+            setTimeout(() => {
+                notification.remove(); // Remove the notification
+            }, 3000);
+        }
+
+        // Function to disable or enable "Select" buttons based on the total selected and enrolled courses
+        function updateSelectButtonsState() {
+            const totalSelected = enrolledCount + selectedCourses.length; // Total thenumber of selected and enrolled courses
+            const disableSelect = totalSelected >= MAX_COURSES; // Determine if the select buttons should be disabled
+
+            if (disableSelect) {
+                showNotification('You have reached the maximum number of courses.'); // Show notification if the limit is reached
+            }
+
+            document.querySelectorAll('.btn-select').forEach(button => {
+                const courseId = button.dataset.courseId; // Get the course ID from the button's data attribute
+
+                // Only enable/disable buttons that are not already selected or disabled for enrolled courses
+                if (!selectedCourses.find(course => course.id === courseId)
+                    && button.textContent.trim() !== 'Enrolled') {
+                    button.disabled = disableSelect; // Disable or enable the button
+                    button.style.backgroundColor = disableSelect ? '#ccc' : '#8d0404'; // Change the background color
+                    button.style.cursor = disableSelect ? 'not-allowed' : 'pointer'; // Change the cursor style
+                }
+            });
+        }
+
+        // Add course selection to the table and disable buttons when the limit is reached
+        function addCourse(courseId, courseName, professorName, button) {
+
+            // Add course to the selectedCourses array
+            selectedCourses.push({ id: courseId, name: courseName, professor: professorName });
+
+            // Add a new row to the "Selected Courses" table
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${courseName}</td>
+                <td>${professorName}</td>
+                <td>
+                    <img src="{{ url_for('static', filename='trash.png') }}"
+                        alt="Remove"
+                        class="trash-icon"
+                        data-course-id="${courseId}">
+                </td>
+            `;
+            selectedTableBody.appendChild(row); // Append the new row to the selected courses table
+
+            // Update the button's text to "Selected" and disable it
+            if (button) {
+                button.disabled = true; // Disable the button
+                button.style.backgroundColor = '#ccc'; // Change the background to indicate it's disabled
+                button.style.cursor = 'not-allowed'; // Update cursor style
+                button.textContent = 'Selected'; // Change the text to "Selected"
+            }
+
+            // Add event listener for the trash icon (remove functionality)
+            row.querySelector('.trash-icon').addEventListener('click', () => {
+                // Remove the course from the selectedCourses array
+                selectedCourses = selectedCourses.filter(course => course.id !== courseId);
+
+                // Remove the row from the "Selected Courses" table
+                row.remove();
+
+                // Re-enable the "Select" button for this course
+                if (button) {
+                    button.disabled = false; // Re-enable the button
+                    button.style.backgroundColor = '#8d0404';
+                    button.style.cursor = 'pointer';
+                    button.textContent = 'Select'; // Restore the text to "Select"
+                }
+
+                // Remove the grayed-out class from the course row
+                const courseRow = button.closest('tr');
+                courseRow.classList.remove('grayed-out');
+
+                // Recalculate button states to allow further selection if the limit allows it
+                updateSelectButtonsState();
+            });
+
+            // Update the state of the "Select" buttons
+            updateSelectButtonsState();
+
+            // Gray out the entire row of selected courses
+            const courseRow = button.closest('tr');
+            courseRow.classList.add('grayed-out');
+        }
+
+        // Attach event listeners to the "Select" buttons
+        document.querySelectorAll('.btn-select').forEach(button => {
+            button.addEventListener('click', () => {
+                const courseId = button.dataset.courseId; // Get the course ID from the button's data attribute
+                const courseName = button.dataset.courseName; // Get the course name from the button's data attribute
+                const professorName = button.dataset.professorName; // Get the professor name from the button's data attribute
+
+                addCourse(courseId, courseName, professorName, button); // Add the course to the selected courses
+            });
+        });
+
+        // Event Listener for Confirm Application Button
+        confirmButton.addEventListener('click', () => {
+            if (selectedCourses.length === 0) {
+                alert('No courses selected!'); // Show alert if no courses are selected
+                return;
+            }
+
+            // Open confirmation modal
+            modal.style.display = 'flex';
+        });
+
+        // Modal confirmation button
+        document.getElementById('confirm-modal-yes').addEventListener('click', () => {
+            const form = document.createElement('form'); // Create a new form element
+            form.method = 'POST'; // Set the form method to POST
+            form.action = '{{ url_for("student.apply_course") }}'; // Set the form action URL
+
+            selectedCourses.forEach(course => {
+                const input = document.createElement('input'); // Create a new input element
+                input.type = 'hidden'; // Set the input type to hidden
+                input.name = 'selected_course_ids'; // Set the input name
+                input.value = course.id; // Set the input value to the course ID
+                form.appendChild(input); // Append the input to the form
+            });
+
+            document.body.appendChild(form); // Append the form to the body
+            form.submit(); // Submit the form
+
+            // Close the modal
+            modal.style.display = 'none';
+        });
+
+        // Modal cancel button
+        document.getElementById('confirm-modal-no').addEventListener('click', () => {
+            modal.style.display = 'none'; // Close the modal
+        });
+
+        // Initialize button states on page load
+        updateSelectButtonsState();
+    });
+</script>
+
+
+
+
+{% endblock %}

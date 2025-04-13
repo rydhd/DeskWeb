@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+<!-- The template inherits from 'base.html' which provides the common layout structure -->
+
+{% block title %}Admin Login{% endblock %}
+<!-- Sets the page title to "Admin Login" within the 'title' block from the base template -->
+
+{% block content %}
+<!-- Starts the 'content' block that will contain the specific HTML content for this page -->
+
+<html style="height: 100%;">
+<!-- Sets the height of the HTML document to take up 100% of the viewport -->
+<head>
+    <!-- Inline styles for designing the page -->
+    <style>
+        /* Style for the top-left logo */
+        .top-left-logo {
+            position: absolute; /* Position the logo relative to the viewport */
+            top: 0; /* Align at the very top */
+            left: 0; /* Align at the very left */
+            height: 100%; /* Fit the full height of the viewport */
+            width: auto; /* Maintain the aspect ratio by adjusting the width automatically */
+            margin: 0; /* Remove any extra space around the logo */
+            overflow: hidden; /* Prevent scrollbars */
+        }
+
+        html, body {
+            height: 100%; /* Ensures both HTML and body occupy full height */
+            margin: 0; /* Removes default browser margin */
+            background-image:
+            url('static/image.png'), /* Sets the topmost background image */
+            url('static/Group.svg'); /* Sets the secondary background image behind it */
+            background-size: cover; /* Scales images individually: cover fills topmost, contain keeps aspect ratio */
+            background-repeat: no-repeat, no-repeat; /* Prevents the images from repeating/tiling */
+            background-position: center, center; /* Centers both background images */
+        }
+
+        /* Styles for the login container position on the page */
+        .positioned-div {
+            top: 45%; /* Centers the div vertically at 45% of the viewport height */
+            left: 40%; /* Horizontally positions the div towards the center-right */
+            transform: translateY(-50%); /* Adjusts the div to center properly vertically */
+            position: absolute; /* Uses absolute positioning relative to the viewport */
+            width: 1000px; /* Sets a fixed width for the login container */
+            max-width: 90%; /* Makes it responsive by limiting width on small screens */
+        }
+
+        /* Styles for the form background */
+        .custom-bg {
+            background-color: #7b1818; /* Sets a custom dark red background color */
+            color: white; /* Ensures text color has good contrast against the background */
+            border-radius: 8px; /* Adds rounded corners to the form container */
+            padding: 1.5rem; /* Adds internal spacing inside the container */
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25); /* Adds a subtle shadow for depth */
+        }
+
+        /* Styles for the form labels */
+        .custom-bg label {
+            color: white; /* Sets label text color to white for readability */
+        }
+    </style>
+</head>
+<body>
+<!-- Body of the page -->
+
+<!-- Add the SVG logo at the top-left of the page -->
+<img src="static/CAMP.svg" alt="CAMP Logo" class="top-left-logo"/>
+
+<div class="container mt-5 positioned-div">
+    <!-- Main container for the login form with styles applied for positioning -->
+    <div align="center">
+        <!-- Center aligns the contents inside this div -->
+        <div style="width: 30%;">
+            <!-- Limits the internal child div to 30% of the parent container's width -->
+            <h3 class="text-center" style="color: white"> Admin Login </h3>
+            <!-- Title of the login form displayed in white and center aligned -->
+
+            <!-- Login form -->
+            <form method="POST" class="custom-bg shadow">
+                <!-- Form handles user credentials and sends data via POST method -->
+                <div class="form-group">
+                    <!-- Grouping for the username input field -->
+                    <label for="username">Username:</label>
+                    <!-- Label for the username input -->
+                    <input type="text" class="form-control" id="username" name="username" required placeholder="Enter Username">
+                    <!-- Input field for the username, marked as required with a placeholder -->
+                </div>
+
+                <div class="form-group">
+                    <!-- Grouping for the password input field -->
+                    <label for="password">Password:</label>
+                    <!-- Label for the password input -->
+                    <input type="password" class="form-control" id="password" name="password" required placeholder="Enter Password">
+                    <!-- Input field for the password, marked as required with a placeholder -->
+                </div>
+
+                <!-- Container for the buttons, used to align them horizontally -->
+                <div class="d-flex justify-content-between">
+                    <!-- Back to Home button -->
+                    <a href="{{ url_for('views.home') }}" class="btn btn-secondary">
+                        <!-- Link to the home page -->
+                        <i class="fa fa-arrow-left"></i> Back to Home
+                        <!-- Font Awesome icon for returning to the home page paired with text -->
+                    </a>
+
+                    <!-- Login button -->
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <!-- Submit button for the login form -->
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
+{% endblock %}
+<!-- Ends the 'content' block -->

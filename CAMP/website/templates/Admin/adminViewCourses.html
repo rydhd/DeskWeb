@@ -1,0 +1,417 @@
+{% extends "Admin/adminNavbarCourses.html" %}
+<!-- This template extends "adminNavbar.html" to include the admin navigation bar -->
+{% block title %}Admin View Courses{% endblock %}
+
+{% block content %}
+
+<style>
+    body{
+        background-color: #d9d9d9;
+    }
+
+    /* Styles for the main container */
+    .container {
+        margin-left: 0;
+        margin-top: 1rem;
+    }
+
+    /* Page title - "Courses" styling */
+    h3.text-left {
+        font-size: 2rem;
+        color: #8d0404;
+        font-weight: bold;
+    }
+
+    /* Styles for the table */
+    .table-responsive {
+        max-height: 730px;  /* Restrict the height of the table container to 540px */
+        overflow-y: auto;  /* Enable vertical scrolling when content exceeds the max height */
+        width: 1500px;  /* Set a fixed width for the table container */
+    }
+
+    .table {
+        table-layout: fixed; /* Keeps the table layout uniform */
+        border-collapse: collapse; /* Removes gaps between cells */
+    }
+
+    /* Updated styles for the table header */
+    .table thead {
+        background-color: #8d0404; /* Set the header background to the desired color */
+        color: white; /* White text for better contrast with the header background color */
+        position: sticky; /* Makes the header sticky */
+        top: 0; /* Keeps the header at the top while scrolling */
+        z-index: 1; /* Ensures the header stays on top of other content */
+    }
+
+    .table-bordered {
+        border: none; /* Removes the border around the table */
+    }
+
+    .table-bordered th,
+    .table-bordered td {
+        border-left: none; /* Remove the vertical borders */
+        border-right: none; /* Remove the vertical borders */
+        border-top: 1px solid #dee2e6; /* Keep horizontal borders */
+        border-bottom: 1px solid #dee2e6; /* Keep horizontal borders */
+    }
+
+
+    /* Style the scrollbar only for the table */
+    .table-responsive::-webkit-scrollbar {
+        width: 10px; /* Width of the scrollbar */
+        height: 10px; /* Height of the scrollbar */
+    }
+
+    /* Track color */
+    .table-responsive::-webkit-scrollbar-track {
+        background: transparent; /* Transparent background for the scrollbar track */
+    }
+
+    /* Thumb (scroll handle) color */
+    .table-responsive::-webkit-scrollbar-thumb {
+        background-color: #8d0404; /* Your desired color for the scrollbar */
+    }
+
+    /* On hover, make the scrollbar thumb slightly darker for better feedback */
+    .table-responsive::-webkit-scrollbar-thumb:hover {
+        background-color: #5a1212; /* A darker shade of the same color for hover effect */
+    }
+
+    /* Style for "no courses found" message */
+    .text-danger {
+        color: #dc3545; /* Red color for error messages */
+        margin-top: 1rem;
+    }
+
+    /* Add Course button styles */
+    .add-course-btn {
+        background-color: white; /* Matches the header background color */
+        color: #8d0404; /* White text for visibility */
+        border: 1px solid; /* Removes border */
+        padding: 10px 20px; /* Adds padding for better appearance */
+        font-size: 0.9rem; /* Slightly smaller text size */
+        cursor: pointer; /* Changes the cursor to a pointer on hover */
+    }
+
+    .add-course-btn:hover {
+        color: white;
+        background-color: #5a1212; /* Darker shade for hover effect */
+    }
+
+    /* Positioning for the Add Course button */
+    .add-course-container {
+        margin-top: 1rem; /* Space above the button */
+        display: flex; /* Allows alignment */
+        justify-content: flex-start; /* Align to the left */
+    }
+
+    .table-row {
+        background-color: white;
+    }
+
+
+    .course-name {
+        width: 20%;
+        font-weight: normal;
+        text-align: left;
+    }
+    .day {
+        width: 15%;
+        font-weight: normal;
+        text-align: left;
+    }
+    .time {
+        width: 20%;
+        font-weight: normal;
+        text-align: left;
+    }
+    .assigned-professor {
+        width: 25%;
+        font-weight: normal;
+        text-align: left;
+    }
+    /* Modal styles */
+    .modal-course {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .modal-content-course {
+        background-color: #fff;;
+        width: 800px;
+        height: 270px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .title {
+        width: 100%;
+        padding: 3px;
+        background-color: #8d0404;
+        font-weight: bold;
+        color: white;
+        font-size: 1.5rem;
+        padding-top: 15px;
+        padding-left: 30px;
+        padding-bottom: 5px;
+
+    }
+
+    .btn2-course {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #8d0404;
+        color: white;
+        border: none;
+        padding-top: 10px;
+        padding-right: 15px;
+        cursor: pointer;
+    }
+
+   
+    .add-course-container {
+        margin-top: 1rem; /* Space above the button */
+        display: flex; /* Allows alignment */
+        justify-content: flex-start; /* Align to the left */
+    }
+
+    .add-course-btn {
+        background-color: white; /* Matches the header background color */
+        color: #8d0404; /* White text for visibility */
+        border: 1px solid; /* Removes border */
+        padding: 10px 20px; /* Adds padding for better appearance */
+        font-size: 0.9rem; /* Slightly smaller text size */
+        cursor: pointer; /* Changes the cursor to a pointer on hover */
+    }
+
+    .add-course-btn-modal {
+        background-color: #8d0404; /* Matches the header background color */
+        color: white; /* White text for visibility */
+        border: 1px solid; /* Removes border */
+        padding: 10px 20px; /* Adds padding for better appearance */
+        margin-left: 615px;
+        font-size: 0.9rem; /* Slightly smaller text size */
+        cursor: pointer; /* Changes the cursor to a pointer on hover */
+        
+    }
+
+    .add-course-btn:hover {
+        color: white;
+        background-color: #5a1212; /* Darker shade for hover effect */
+    }
+
+    /* Form styles */
+    .form-row {
+        display: flex; /* Aligns elements inside the form row horizontally */
+        justify-content: space-between; /* Distributes the space evenly between columns */
+    }
+
+    .form-column {
+        flex: 1; /* Equalizes the width of the columns */
+        display: flex; /* Aligns elements within the column using flexbox */
+        flex-direction: column; /* Arranges the column elements vertically */
+        margin-left: 30px;
+        margin-right: 40px;
+    
+    }
+
+    .form-group {
+        display: flex; /* Aligns label and input field horizontally */
+        align-items: center; /* Vertically centers the label and input */
+        margin-bottom: 10px; /* Adds spacing between groups */
+        color: #8d0404;
+    }
+
+
+
+    label {
+        margin-right: 5px; /* Adds space between label and input field */
+        width: 120px; /* Ensures all labels have the same width for consistent alignment */
+        font-size: 14px;
+        font-weight: bold;
+        text-align: left; /* Aligns the text label to the right */
+    }
+
+    input, select {
+        flex: 1; /* Allows input field or dropdown to take up remaining space */
+        padding: 8px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        color: #8d0404;
+    }
+
+    input:focus, select:focus {
+        border-color: #8d0404; /* Changes border color to dark red on focus */
+        outline: none;
+        box-shadow: 0 0 3px rgba(255, 0, 43, 0.8); /* Adds a subtle red shadow for focus indication */
+    }
+
+</style>
+
+<div class="container">
+    <!-- Main container for the page content with a top margin -->
+    <h3 class="text-left">COURSES</h3>
+    <!-- Page title displayed at the top -->
+
+    <!-- Conditional block to check if there are courses to display -->
+    {% if courses %}
+    <!-- If courses exist, render the list in a responsive table -->
+
+    <div class="table-responsive mt-4">
+        <!-- Table container that becomes scrollable if the content overflows vertically -->
+        <table class="table table-bordered text-center fixed-table">
+            <!-- Table with borders and centered text -->
+            <thead>
+                <!-- Table header with the updated background color -->
+                <tr>
+                    <th class="course-name" style="padding-left: 40px">Course Name</th>
+                    <th class="day" style="padding-left: 60px">Day</th>
+                    <th class="time" style="padding-left: 40px">Time</th>
+                    <th class="assigned-professor" style="padding-left: 20px">Assigned Professor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Table body for dynamic rows of courses -->
+                {% for course in courses %}
+                <tr class="table-row">
+                    <td style="text-align: left; padding-left: 40px ">{{ course[0] }}</td>
+                    <td style="text-align: left; padding-left: 60px">{{ course[1] }}</td>
+                    <td style="text-align: left; padding-left: 40px">{{ course[2] }} - {{ course[3] }}</td>
+                    <td style="text-align: left; padding-left: 20px">{{ course[4] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add Course button -->
+    <div class="add-course-container">
+        <button class="add-course-btn" onclick="openAddCourseModal()">Add Course</button>
+    </div>
+
+    {% else %}
+    <!-- If no courses exist, display an appropriate message -->
+     
+    <p class="text-center mt-3 text-danger">No courses found.</p>
+    <div class="add-course-container">
+        <button class="add-course-btn" onclick="openAddCourseModal()">Add Course</button>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Add Course Modal -->
+<div id="addCourseModal" class="modal-course" style="display: none;">
+    <div class="modal-content-course">
+        <div class="title">
+            <h2>ADD COURSE</h2> <!-- Title heading for the Add Course Modal -->
+        </div>
+        <button class="btn2-course" onclick="closeAddCourseModal()">x</button> <!-- Close button -->
+        <div class="container">
+            <form id="addCourseForm">
+                <div class="form-row">
+                    <!-- Left Column -->
+                    <div class="form-column">
+                        <div class="form-group">
+                            <label for="course_name">Course Name:</label>
+                            <input type="text" id="course_name" name="course_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="professor">Professor:</label>
+                            <select id="professor" name="professor" required>
+                                <option value="" disabled selected>Select a professor</option>
+                                {% for professor in professors %}
+                                    <option value="{{ professor[0] }}">{{ professor[1] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Right Column -->
+                    <div class="form-column">
+                        <div class="form-group">
+                            <label for="day" style="text-align: right; padding-right: 25px">Day:</label>
+                            <select id="day" name="day" required>
+                                <option value="" disabled selected>Select Day</option>
+                                <option value="Monday">Monday</option>
+                                <option value="Tuesday">Tuesday</option>
+                                <option value="Wednesday">Wednesday</option>
+                                <option value="Thursday">Thursday</option>
+                                <option value="Friday">Friday</option>
+                                <option value="Saturday">Saturday</option>
+                                <option value="Sunday">Sunday</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="time" style="text-align: right; padding-right: 25px">Time:</label>
+                            <select id="time" name="time" required>
+                                <option value="" disabled selected>Select Time</option>
+                                <option value="07:00:00-09:00:00">07:00:00 - 09:00:00</option>
+                                <option value="09:00:00-11:00:00">09:00:00 - 11:00:00</option>
+                                <option value="11:00:00-13:00:00">11:00:00 - 13:00:00</option>
+                                <option value="13:00:00-15:00:00">13:00:00 - 15:00:00</option>
+                                <option value="15:00:00-17:00:00">15:00:00 - 17:00:00</option>
+                                <option value="17:00:00-19:00:00">17:00:00 - 19:00:00</option>
+                                <option value="19:00:00-21:00:00">19:00:00 - 21:00:00</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="add-course-container">
+                    <button type="submit" class="add-course-btn-modal">Add Course</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // Function to open the Add Course modal
+    function openAddCourseModal() {
+        document.getElementById('addCourseModal').style.display = 'block';
+    }
+
+    // Function to close the Add Course modal
+    function closeAddCourseModal() {
+        document.getElementById('addCourseModal').style.display = 'none';
+    }
+
+    // Handle form submission via AJAX
+    document.getElementById('addCourseForm').addEventListener('submit', async function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const formData = new FormData(this);
+
+        try {
+            const response = await fetch('/admin/courses', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert(result.message); // Show success message
+                window.location.reload(); // Reload the page to update the course list
+            } else {
+                alert(result.message); // Show error message
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An unexpected error occurred. Please try again.');
+        }
+    });
+</script>
+
+
+{% endblock %}

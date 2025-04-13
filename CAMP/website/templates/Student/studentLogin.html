@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+<!-- Extends from the "base.html" template, meaning this page will inherit its common layout -->
+
+{% block title %}Student Login{% endblock %}
+<!-- Sets the title of the page to "Admin Login". This will appear in the browser tab -->
+
+{% block content %}
+<!-- Start of the block where page-specific content will go -->
+
+<html style="height: 100%;">
+<!-- Sets the HTML element height to 100% for a full-page layout -->
+
+<head>
+    <style>
+        /* Style for the top-left logo */
+        .top-left-logo {
+            position: absolute; /* Position the logo relative to the viewport */
+            top: 0; /* Align at the very top */
+            left: 0; /* Align at the very left */
+            height: 100%; /* Fit the full height of the viewport */
+            width: auto; /* Maintain the aspect ratio by adjusting the width automatically */
+            margin: 0; /* Remove any extra space around the logo */
+            overflow: hidden; /* Prevent scrollbars */
+        }
+        html, body {
+            height: 100%; /* Ensures both HTML and body occupy full height */
+            margin: 0; /* Removes default browser margin */
+            background-image:
+            url('static/image.png'), /* Sets the topmost background image */
+            url('static/Group.svg'); /* Sets the secondary background image behind it */
+            background-size: cover; /* Scales images individually: cover fills topmost, contain keeps aspect ratio */
+            background-repeat: no-repeat, no-repeat; /* Prevents the images from repeating/tiling */
+            background-position: center, center; /* Centers both background images */
+        }
+
+        /* Style for the login container */
+        .positioned-div {
+            top: 45%; /* Positions the container vertically in the middle (45% from the top) */
+            left: 40%; /* Positions the container horizontally, offset to the left */
+            transform: translateY(-50%); /* Adjusts alignment for true vertical centering */
+            position: absolute; /* Uses absolute positioning for precise placement */
+            width: 1000px; /* Sets a fixed width for the login container */
+            max-width: 90%; /* Makes the container responsive on smaller screens */
+        }
+
+        /* Custom background style for the form */
+        .custom-bg {
+            background-color: #7b1818; /* Sets a deep red background for the form */
+            color: white; /* Sets the text color to white for good contrast */
+            border-radius: 8px; /* Rounds the corners of the form box */
+            padding: 1.5rem; /* Adds generous padding inside the form for spacing */
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25); /* Adds a shadow for a slight floating effect */
+        }
+
+        /* Styling labels for input fields inside the form */
+        .custom-bg label {
+            color: white; /* Keeps the label color consistent with the form design */
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Main body of the login page -->
+<img src="static/CAMP.svg" alt="CAMP Logo" class="top-left-logo"/>
+
+    <div class="container mt-5 positioned-div">
+        <!-- Bootstrap container with a top margin and custom positioning for the form -->
+
+        <div align="center">
+            <!-- Centers the content within the container -->
+
+            <div style="width: 30%;">
+                <!-- Restricts the content width to 30% of the container for alignment -->
+
+                <h3 class="text-center" style="color: white"> Student Login </h3>
+                <!-- Header for the login form with centered white text -->
+
+                <form method="POST" class="custom-bg shadow">
+                <!-- Form begins here -->
+                <!-- method="POST": This form uses POST to securely send data -->
+                <!-- class="custom-bg shadow": Gives the form a custom background and adds a shadow effect -->
+
+                    <div class="form-group">
+                        <!-- Form group for the username input field -->
+                        <label for="username">Username:</label>
+                        <!-- Label for the username input -->
+                        <input type="text" class="form-control" id="username" name="username" required placeholder="Enter Username">
+                        <!-- Text input for the username -->
+                        <!-- class="form-control": Applies Bootstrap styles -->
+                        <!-- id="username": Unique identifier for this input field -->
+                        <!-- name="username": Associates the input with "username" variable for form submission -->
+                        <!-- required: Makes the input mandatory -->
+                        <!-- placeholder="Enter Username": Provides hints to the user with placeholder text -->
+                    </div>
+
+                    <div class="form-group">
+                        <!-- Form group for the password input field -->
+                        <label for="password">Password:</label>
+                        <!-- Label for the password input -->
+                        <input type="password" class="form-control" id="password" name="password" required placeholder="Enter Password">
+                        <!-- Password field input -->
+                        <!-- class="form-control": Applies Bootstrap styles -->
+                        <!-- id="password": Unique identifier for this field -->
+                        <!-- name="password": Associates the input with "password" variable for form submission -->
+                        <!-- required: Makes the input mandatory -->
+                        <!-- placeholder="Enter Password": Provides hints to the user with placeholder text -->
+                    </div>
+
+                    <!-- Button container for actions -->
+                    <div class="d-flex justify-content-between">
+                        <!-- Uses Flexbox to create a horizontal layout aligning items with space between them -->
+
+                        <!-- Back to Home Button -->
+                        <a href="{{ url_for('views.home') }}" class="btn btn-secondary">
+                            <!-- Provides a link back to the home page -->
+                            <i class="fa fa-arrow-left"></i> Back to Home
+                            <!-- Includes a FontAwesome left-arrow icon followed by the text "Back to Home" -->
+                        </a>
+
+                        <!-- Submit/Login Button -->
+                        <button type="submit" class="btn btn-primary">
+                            <!-- Button submits the form to the server -->
+                            Login
+                            <!-- Text displayed on the button -->
+                        </button>
+                    </div>
+                </form>
+                <!-- End of the login form -->
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+
+{% endblock %}
+<!-- End of the content block -->

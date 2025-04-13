@@ -1,0 +1,323 @@
+{% extends "Admin/adminNavbarCourses.html" %}
+
+{% block title %}Admin Add Course{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #d9d9d9; /* Sets the background color of the page to light gray. */
+        padding-top: 100px; /* Moves the container downwards. */
+        padding-right: 100px; /* Moves the container towards the left. */
+    }
+
+    h2 {
+        font-size: 2rem; /* Defines the font size for the heading. */
+        font-weight: bolder; /* Makes the text bold. */
+        color: #8d0404; /* Sets the text color to dark red. */
+        background-color: #d9d9d9; /* Background color for the heading matching the body. */
+        height: 50px; /* Sets a fixed height for the heading. */
+        margin-bottom: 0; /* Removes default bottom margin. */
+    }
+
+    .container {
+        height: 90px; /* Allows the container to adjust height based on its content. */
+        width: 800px; /* Sets the container width to 800px. */
+        padding: 0; /* Resets padding of the container. */
+        font-family: Lexend Deca, sans-serif; /* Sets font style for the container. */
+        background-color: #8d0404; /* Sets the background color to dark red. */
+    }
+
+    h6 {
+        font-size: 1.2rem; /* Slightly larger font size for subheadings. */
+        color: white; /* Sets the text color to white for better contrast. */
+        font-weight: normal; /* Resets font weight to normal for readability. */
+        text-align: left; /* Aligns the text to the left. */
+        padding-top: 10px; /* Adds padding to the top of the subheading. */
+        margin-left: 10px; /* Adds a small left margin for positioning. */
+    }
+
+    form {
+        height: auto; /* Lets the form height adjust based on its content. */
+        padding: 20px 40px 20px 20px; /* Adds spacing inside the form. */
+        background-color: #f8f9fa; /* Sets a light gray background color for the form. */
+        color: #8d0404; /* Sets text color to dark red. */
+    }
+
+    .form-row {
+        display: flex; /* Aligns elements inside the form row horizontally. */
+        justify-content: space-between; /* Distributes the space evenly between columns. */
+        gap: 20px; /* Adds spacing between the columns. */
+    }
+
+    .form-column {
+        flex: 1; /* Equalizes the width of the columns. */
+        display: flex; /* Aligns elements within the column using flexbox. */
+        flex-direction: column; /* Arranges the column elements vertically. */
+    }
+
+    .form-group {
+        display: flex; /* Aligns label and input field horizontally */
+        align-items: center; /* Vertically centers the label and input */
+        margin-bottom: 15px; /* Adds spacing between groups */
+    }
+
+    label {
+        margin-right: 5px; /* Adds space between label and input field */
+        width: 120px; /* Ensures all labels have the same width for consistent alignment */
+        font-size: 14px;
+        font-weight: bold;
+        text-align: left; /* Aligns the text label to the right */
+    }
+
+    input, select {
+        flex: 1; /* Allows input field or dropdown to take up remaining space */
+        padding: 8px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        color: #8d0404;
+    }
+
+    input:focus, select:focus, textarea:focus {
+        border-color: #8d0404; /* Changes border color to dark red on focus. */
+        outline: #8d0404; /* Removes default outline color and matches it to dark red. */
+        box-shadow: 0 0 3px rgba(255, 0, 43, 0.8); /* Adds a subtle red shadow for focus indication. */
+    }
+
+    small {
+        color: #dc3545; /* Sets the text color for helper/error messages to red. */
+        font-size: 12px; /* Reduces the font size for small messages. */
+    }
+
+    .btn-primary {
+        font-size: 14px; /* Sets font size for primary buttons. */
+        background-color: #8d0404; /* Sets button background to dark red. */
+        color: #fff; /* Makes button text white for contrast. */
+        padding: 8px 16px; /* Adds padding for click area. */
+        border: none; /* Removes the default borders. */
+        border-radius: 4px; /* Rounds the button corners slightly. */
+    }
+
+    .btn-primary:hover {
+        background-color: #fff; /* Reverses background to white on hover. */
+        color: #8d0404; /* Makes the button text dark red on hover. */
+        border: 1px solid #8d0404; /* Adds a border for hover effect. */
+    }
+
+    .btn2 {
+        background-color: #8d0404; /* Sets a dark red background for the 'close' button. */
+        color: #fff; /* Makes 'close' button text white. */
+        border: none; /* Removes the button border. */
+        float: right; /* Aligns the button to the right side. */
+        margin-top: 0; /* Removes top margin. */
+        margin-right: 20px; /* Adds some space from the container edge. */
+        padding: 8px 16px; /* Adds padding for better usability. */
+    }
+
+    .btn2:hover {
+        color: white; /* Keeps the text color white on hover. */
+        text-decoration: none; /* Removes underline on hover. */
+    }
+
+    .buttons {
+        padding-top: 40px; /* Adds space above buttons. */
+        padding-bottom: 40px; /* Adds space below buttons. */
+        padding-left: 0 !important; /* Overrides any padding on the left with 0. */
+        margin-left: 670px; /* Offsets buttons by providing a left margin. */
+        position: absolute; /* Sets an absolute position for buttons. */
+    }
+
+    select {
+        flex: 1;
+        padding: 8px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        color: #8d0404;
+        appearance: none; /* Hides the default dropdown arrow for consistent styling */
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 6.448c-.566-.635-.106-1.648.753-1.648h9.592c.86 0 1.319 1.013.753 1.648l-4.796 4.692a1 1 0 0 1-1.408 0z"/></svg>');
+        background-repeat: no-repeat;
+        background-position: right 10px center; /* Moves the arrow icon 10px to the left */
+        background-size: 12px; /* Adjusts icon size */
+        cursor: pointer;
+    }
+
+    select:focus {
+        border-color: #8d0404;
+        outline: none;
+    }
+
+    /* Notification styling */
+    .notification {
+        position: fixed; /* Fix the position */
+        top: 10px; /* Set top position */
+        right: 10px; /* Set right position */
+        padding: 15px; /* Add padding */
+        border-radius: 5px; /* Round the corners */
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Add shadow */
+        font-size: 14px; /* Set font size */
+        z-index: 1000; /* Ensure it appears above other content */
+        opacity: 1; /* Set opacity */
+        transition: opacity 0.5s ease; /* Smooth transition for opacity */
+    }
+
+    .notification.success {
+        background-color: #28a745; /* Green background for success */
+        color: white; /* White text color */
+    }
+
+    .notification.fail {
+        background-color: #dc3545; /* Red background for failure */
+        color: white; /* White text color */
+    }
+</style>
+
+
+<body>
+    <div class="title">
+        <h2>ADD COURSE</h2> <!-- Title heading for the Add Course Page. -->
+    </div>
+    <a href="{{ url_for('admin.view_courses') }}" class="btn2">x</a> <!-- Close button redirects to 'admin.view_courses' page. -->
+
+    <div class="container">
+        <h6>COURSE DETAILS</h6> <!-- Section heading indicating where to input course details. -->
+        <form method="POST" onsubmit="return validateFormFaculty()"> <!-- Form submission via POST with a JavaScript validation. -->
+            <div class="form-row">
+                <!-- Left Column -->
+                <div class="form-column">
+                    <div class="form-group">
+                        <label for="course_name">Course Name:</label>
+                        <input type="text" id="course_name" name="course_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="professor">Professor:</label>
+                        <select id="professor" name="professor" required>
+                            <option value="" disabled selected>Select a professor</option>
+                            {% for professor in professors %}
+                                <option value="{{ professor[0] }}">{{ professor[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <!-- Right Column -->
+                <div class="form-column">
+                    <div class="form-group">
+                        <label for="day" style="text-align: right; padding-right: 25px">Day:</label>
+                        <select id="day" name="day" required>
+                            <option value="" disabled selected>Select Day</option>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                            <option value="Saturday">Saturday</option>
+                            <option value="Sunday">Sunday</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="time" style="text-align: right; padding-right: 25px">Time:</label>
+                        <select id="time" name="time" required>
+                            <option value="" disabled selected>Select Time</option>
+                            <option value="07:00:00-09:00:00">07:00:00 - 09:00:00</option>
+                            <option value="09:00:00-11:00:00">09:00:00 - 11:00:00</option>
+                            <option value="11:00:00-13:00:00">11:00:00 - 13:00:00</option>
+                            <option value="13:00:00-15:00:00">13:00:00 - 15:00:00</option>
+                            <option value="15:00:00-17:00:00">15:00:00 - 17:00:00</option>
+                            <option value="15:00:00-17:00:00">17:00:00 - 19:00:00</option>
+                            <option value="15:00:00-17:00:00">19:00:00 - 21:00:00</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="buttons">
+                <button type="submit" class="btn-primary">Add Course</button>
+            </div>
+        </form>
+    </div>
+</body>
+
+<!-- Confirmation Modal -->
+<div id="confirmationModal" class="modal">
+    <div class="modal-content">
+        <p>Are you sure you want to add this course?</p>
+        <div class="modal-buttons">
+            <button class="cancel-button" onclick="closeConfirmationModal()">Cancel</button>
+            <button class="confirm-button" id="confirmAddCourse">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Function to show a notification
+    function showNotification(message, isSuccess = true) {
+        const notification = document.createElement('div'); // Create a new div for the notification
+        notification.className = isSuccess ? 'notification success' : 'notification fail'; // Add success or fail class
+        notification.textContent = message; // Set the notification message
+        document.body.appendChild(notification); // Append the notification to the body
+
+        // Automatically remove the notification after 5 seconds
+        setTimeout(() => {
+            notification.remove(); // Remove the notification
+        }, 5000);
+    }
+
+    // Open the confirmation modal
+    function openConfirmationModal() {
+        document.getElementById('confirmationModal').style.display = 'flex';
+    }
+
+    // Close the confirmation modal
+    function closeConfirmationModal() {
+        document.getElementById('confirmationModal').style.display = 'none';
+    }
+
+    // Handle form submission
+    async function submitForm(form) {
+        const formData = new FormData(form); // Collect form data
+        console.log("Submitting form..."); // Debugging log
+        try {
+            const response = await fetch(form.action, {
+                method: form.method,
+                body: formData,
+            });
+
+            console.log("Response received:", response); // Debugging log
+
+            if (response.ok) {
+                const result = await response.json(); // Parse the JSON response
+                console.log("Parsed result:", result); // Debugging log
+
+                if (result.success) {
+                    showNotification('Course has been added successfully!', true); // Show success notification
+                    setTimeout(() => {
+                        window.location.reload(); // Reload the page or redirect to another page
+                    }, 5000); // Delay the redirect to allow the notification to stay visible
+                } else if (result.message) {
+                    showNotification('Failed to add course: ' + result.message, false); // Show failure notification
+                } else {
+                    showNotification('An unexpected error occurred. Please try again.', false); // Fallback for unexpected responses
+                }
+            } else {
+                console.error("Response not OK:", response.status); // Debugging log
+                showNotification('An error occurred while adding the course. Please try again.', false); // Show failure notification
+            }
+        } catch (error) {
+            console.error("Error during fetch:", error); // Debugging log
+            showNotification('An unexpected error occurred. Please try again.', false); // Show failure notification
+        }
+    }
+
+    // Attach the form submission handler
+    document.querySelector('form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission
+        const form = event.target; // Store a reference to the form
+        openConfirmationModal(); // Show the confirmation modal
+
+        // Attach a click event to the confirm button
+        const confirmButton = document.getElementById('confirmAddCourse');
+        confirmButton.onclick = () => { 
+            closeConfirmationModal(); // Close the modal
+            submitForm(form); // Pass the form reference explicitly
+        };
+    });
+</script>
+
+{% endblock %}

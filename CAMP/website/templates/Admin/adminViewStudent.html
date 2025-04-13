@@ -1,0 +1,498 @@
+{% extends "Admin/adminNavbar.html" %} <!-- Extend the admin navbar template -->
+
+{% block title %}Admin View Student{% endblock %}
+
+{% block content %}
+<head>
+    <!-- Load FontAwesome for icons like the camera icon -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <style>
+        /* Set the background color for the page */
+        body {
+            background-color: #f4f4f4; /* Light gray background for the entire page */
+            margin-right: 150px; /* Moves the whole content towards the left */
+        }
+
+        /* Styling for the profile container (main content box) */
+        .profile-container {
+            background-color: white;
+            padding: 30px; /* Internal padding */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Box shadow to give a lifted effect */
+            width: 90%;
+            min-height: 600px; /* Minimum height */
+            max-width: 1200px; /* Maximum width */
+            margin: 20px auto; /* Center the box */
+            display: flex;
+            flex-direction: column;
+            position: relative; /* Allows absolute positioning inside */
+        }
+
+        /* Styling for the header bar on top of the profile container */
+        .profile-header-bar {
+            background-color: #8d0404; /* Dark red background */
+            color: white; /* White text */
+            padding: 5px 10px 5px 20px; /* Adjust padding */
+            text-align: left; /* Left align text */
+            font-size: 20px; /* Font size */
+            width: calc(100%); /* Full width of the container */
+            position: absolute; /* Positioned absolutely */
+            top: 0; /* Stick to the top */
+            left: 0; /* Start from the left */
+        }
+
+        /* Styling for the close button in the header bar */
+        .close-button {
+            position: absolute; /* Positioned inside parent */
+            top: 5px; /* Slightly below the top */
+            right: 15px; /* Slightly to the left of the right edge */
+            background: none; /* Transparent background */
+            border: none; /* No border */
+            color: white; /* White text */
+            font-size: 20px; /* Font size */
+            font-weight: bold; /* Bold font */
+            cursor: pointer; /* Pointer cursor */
+        }
+
+        /* Change text color on hover for the close button */
+        .close-button:hover {
+            color: #ddd; /* Lighter shade */
+        }
+
+        /* Style the main content area of the profile */
+        .profile-main-content {
+            margin-top: 55px; /* Add space below the header */
+        }
+
+        /* Style for the top section of the profile (image and student info) */
+        .profile-top {
+            display: flex; /* Flex layout for alignment */
+            align-items: center; /* Center items vertically */
+            margin-bottom: 30px; /* Add space below */
+        }
+
+        /* Wrapper for the profile picture */
+        .profile-picture-wrapper {
+            width: 150px; /* Width of the picture */
+            height: 150px; /* Height of the picture */
+            border-radius: 50%; /* Make it circular */
+            overflow: hidden; /* Hide anything outside the circle */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+            margin-right: 30px; /* Add space to the right */
+            margin-left: 40px; /* Add space to the left */
+            position: relative; /* Position needed for inner elements */
+        }
+
+        /* Style for the profile picture inside its wrapper */
+        .profile-picture {
+            width: 100%; /* Fully fill the wrapper */
+            height: 100%; /* Fully fill the wrapper */
+            object-fit: cover; /* Ensure the image is scaled properly */
+            background-color: #f4f4f4; /* Fallback if no image */
+        }
+
+        /* Form for uploading a new profile picture (camera icon) */
+        .camera-upload-form {
+            position: absolute; /* Positioned relative to the wrapper */
+            bottom: 10px; /* Bottom placement */
+            right: 10px; /* Right placement */
+        }
+
+        /* Styling for the camera icon */
+        .camera-icon {
+            background: rgba(255, 255, 255, 0.1); /* Light overlay on background */
+            color: #8d0404; /* Dark red color */
+            border-radius: 50%; /* Circular shape */
+            width: 40px;
+            height: 40px;
+            display: flex; /* For aligning the icon */
+            align-items: center; /* Center vertically */
+            justify-content: center; /* Center horizontally */
+            cursor: pointer; /* Pointer cursor on hover */
+            font-size: 18px; /* Adjust icon size */
+            border: 1px solid white; /* White border */
+            transition: background 0.3s ease; /* Smooth transition */
+        }
+
+        /* Change background and icon color on hover */
+        .camera-icon:hover {
+            background-color: #8d0404; /* Dark red background */
+            color: white; /* White icon color */
+        }
+
+        /* Hide the file input element */
+        .camera-upload-form input[type="file"] {
+            display: none; /* Hidden */
+        }
+
+        /* Style for the student name */
+        .profile-name {
+            font-size: 24px; /* Larger font size */
+            font-weight: bold; /* Bold text */
+            color: #8d0404; /* Dark red color */
+            margin-bottom: 5px; /* Add space below */
+        }
+
+        /* Style for the student ID */
+        .profile-id {
+            font-size: 16px; /* Normal font size */
+            color: #8d0404; /* Dark red color */
+        }
+
+        /* Horizontal divider line */
+        .divider {
+            margin-top: 10px; /* Space above */
+            height: 2px; /* Thickness */
+            background-color: #ddd; /* Light gray color */
+            width: 700px; /* Fixed width */
+            border: none; /* No border */
+        }
+
+        /* Layout for the editable profile details */
+        .profile-content {
+            display: flex; /* Flex layout */
+            justify-content: space-between; /* Space between columns */
+        }
+
+        /* Individual profile columns */
+        .profile-column {
+            flex: 1; /* Equal width for columns */
+            margin-right: 60px; /* Space between */
+        }
+
+        /* Remove margin for the last column */
+        .profile-column:last-child {
+            margin-right: 0; /* No space after */
+        }
+
+        /* Rows inside the profile column */
+        .profile-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        /* Label for each field in the profile */
+        .profile-label {
+            font-weight: normal; /* Normal text */
+            color: #333; /* Dark gray color */
+            flex: 1; /* Take minimal space */
+        }
+
+        /* Editable input fields */
+        .editable-input {
+            flex: 2; /* Take more space */
+            padding: 10px; /* Inner padding */
+            font-size: 14px; /* Normal font size */
+            border: 1px solid #ddd; /* Light border */
+        }
+
+        /* Buttons for "Expel" and "Update" */
+        .expel-button, .update-button {
+            background-color: #8d0404; /* Dark red */
+            color: white; /* White text */
+            border: none; /* No border */
+            padding: 5px 10px; /* Button padding */
+            border-radius: 4px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor */
+            font-size: 14px; /* Font size */
+        }
+
+        /* Specific styles for the Update button */
+        .update-button {
+            width: 120px; /* Fixed width */
+            margin-left: 400px; /* Shift to the right */
+            margin-top: 50px; /* Add space above */
+        }
+
+        /* Change button background color on hover */
+        .expel-button:hover, .update-button:hover {
+            background-color: #5a1212; /* Slightly darker red */
+        }
+
+        /* Modal styling for confirmation screen */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Fixed to viewport */
+            top: 0; /* Start at the top */
+            left: 0; /* Start at the left */
+            width: 100%; /* Cover full screen width */
+            height: 100%; /* Cover full screen height */
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+            justify-content: center; /* Center content horizontally */
+            align-items: center; /* Center content vertically */
+            z-index: 1000; /* Ensure it's on top of other elements */
+        }
+
+        /* Content inside the modal */
+        .modal-content {
+            background-color: white; /* White background */
+            padding: 20px; /* Inner padding */
+            text-align: center; /* Centered text */
+            width: 300px; /* Fixed width */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow effect */
+        }
+
+        /* Buttons container in the modal */
+        .modal-buttons {
+            display: flex; /* Flexbox layout */
+            justify-content: space-evenly; /* Evenly space buttons */
+            margin-top: 20px; /* Add space above */
+        }
+
+        /* Modal buttons (confirm and cancel) */
+        .modal-buttons button {
+            padding: 10px 20px; /* Button size */
+            border: none; /* No border */
+            border-radius: 6px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor */
+            font-size: 14px; /* Normal font size */
+        }
+
+        /* Confirm button style */
+        .modal-buttons .confirm-button {
+            background-color: #8d0404; /* Dark red */
+            color: white; /* White text */
+        }
+
+        /* Cancel button style */
+        .modal-buttons .cancel-button {
+            background-color: #ddd; /* Light gray */
+            color: black; /* Black text */
+        }
+
+        /* Hover effect for cancel button */
+        .modal-buttons .cancel-button:hover {
+            background-color: #bbb; /* Slightly darker gray */
+        }
+
+        /* Hover effect for confirm button */
+        .modal-buttons .confirm-button:hover {
+            background-color: #5a1212; /* Darker red */
+        }
+    </style>
+
+    <script>
+        function toggleEditMode() {
+        const inputs = document.querySelectorAll('.editable-input');
+        const updateButton = document.getElementById('update-button');
+        const isEditing = updateButton.dataset.editing === 'true';
+
+        if (isEditing) {
+            // Open the save confirmation modal
+            document.getElementById('save-changes-modal').style.display = 'flex';
+        } else {
+            // Enable inputs for editing
+            inputs.forEach(input => input.disabled = false);
+            updateButton.textContent = 'Save Changes';
+        }
+
+        updateButton.dataset.editing = !isEditing;
+    }
+
+        function openSaveModal() {
+            document.getElementById('save-changes-modal').style.display = 'flex';
+        }
+
+        function closeSaveModal() {
+            document.getElementById('save-changes-modal').style.display = 'none';
+        }
+
+        function confirmSave() {
+            // Validate the form before submission
+            if (validateUpdateForm()) {
+                document.getElementById('update-form').submit();
+            } else {
+                // Close the modal if validation fails
+                closeSaveModal();
+            }
+        }
+
+        function openModal() {
+            document.getElementById('confirmation-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('confirmation-modal').style.display = 'none';
+        }
+
+        function confirmExpel() {
+            document.getElementById('expel-form').submit();
+        }
+
+        
+    </script>
+</head>
+<body>
+    <!-- Main profile container -->
+    <div class="profile-container">
+        <!-- Profile header bar -->
+        <div class="profile-header-bar">
+            STUDENT PROFILE <!-- Header text -->
+            <button class="close-button" onclick="window.location.href='{{ url_for('admin.admin_dashboard') }}'">X</button> <!-- Close button redirects to admin dashboard -->
+        </div>
+
+        <!-- Main content area -->
+        <div class="profile-main-content">
+            <!-- Top section: Profile picture and basic details -->
+            <div class="profile-top">
+                <!-- Profile picture wrapper -->
+                <div class="profile-picture-wrapper">
+                    <img src="{{ url_for('static', filename=student[12] if student[12]) }}" alt=" " class="profile-picture"> <!-- Display profile picture -->
+                    <form action="{{ url_for('admin.upload_student_picture', student_id=student[0]) }}" method="POST" enctype="multipart/form-data" class="camera-upload-form"> <!-- Form to upload new profile picture -->
+                        <label for="profile-picture-input" class="camera-icon">
+                            <i class="fas fa-camera"></i> <!-- Camera icon for uploading -->
+                        </label>
+                        <input id="profile-picture-input" type="file" name="profile_picture" onchange="this.form.submit()"> <!-- Hidden input field for file upload -->
+                    </form>
+                </div>
+                <!-- Student name and ID -->
+                <div>
+                    <div class="profile-name">{{ student[1] }}</div> <!-- Display student name -->
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div class="profile-id">AU00{{ student[0] }}</div> <!-- Display student ID -->
+                        <form id="expel-form" action="{{ url_for('admin.delete_student', student_id=student[0]) }}" method="POST" style="margin: 0;"> <!-- Form to expel student -->
+                            <button type="button" class="expel-button" onclick="openModal()">EXPEL STUDENT</button> <!-- Button to open confirmation modal -->
+                        </form>
+                    </div>
+                    <div class="divider"></div> <!-- Horizontal divider -->
+                </div>
+            </div>
+
+            <!-- Editable student information (two-column layout) -->
+            <form id="update-form" action="{{ url_for('admin.update_student', student_id=student[0]) }}" method="POST" onsubmit="return validateUpdateForm()"> <!-- Form to update student information -->
+            <div class="profile-content">
+                <!-- First column: Basic information -->
+                <div class="profile-column">
+                    <div class="profile-row">
+                        <div class="profile-label">Username:</div>
+                        <input type="text" class="editable-input" name="username" value="{{ student[2] }}" disabled maxlength="50">
+                    </div>
+                    <div class="profile-row">
+                        <div class="profile-label">Password:</div>
+                        <input type="text" class="editable-input" name="password" value="{{ student[3] }}" disabled maxlength="10">
+                    </div>
+                    <div class="profile-row">
+                        <div class="profile-label">Birthdate:</div>
+                        <input type="date" class="editable-input" name="birthdate" value="{{ student[4] }}" disabled>
+                    </div>
+                    <div class="profile-row">
+                        <div class="profile-label">Phone Number:</div>
+                        <input type="text" class="editable-input" name="phone_number" value="{{ student[5] }}" disabled pattern="\d{11}" title="Phone number must be exactly 11 digits">
+                    </div>
+                    <div class="profile-row">
+                        <div class="profile-label">Email Address:</div>
+                        <input type="email" class="editable-input" name="email" value="{{ student[6] }}" disabled pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" title="Enter a valid email address">
+                    </div>
+                    <div class="profile-row">
+                        <div class="profile-label">Address:</div>
+                        <input type="text" class="editable-input" name="address" value="{{ student[7] }}" disabled>
+                    </div>
+                </div>
+
+                <!-- Second column: Additional information -->
+                <div class="profile-column">
+                    <div class="profile-row">
+                        <div class="profile-label">LRN:</div>
+                        <input type="text" class="editable-input" name="lrn" value="{{ student[8] }}" disabled pattern="\d{12}" title="LRN must be exactly 12 digits">
+                    </div>
+                    <div class="profile-row">
+                        <div class="profile-label">Citizenship:</div>
+                        <input type="text" class="editable-input" name="citizenship" value="{{ student[9] }}" disabled>
+                    </div>
+                    <div class="profile-row">
+                        <div class="profile-label">Religion:</div>
+                        <input type="text" class="editable-input" name="religion" value="{{ student[10] }}" disabled>
+                    </div>
+                    <div class="profile-row">
+                        <div class="profile-label">Sex:</div>
+                        <input type="text" class="editable-input" name="sex" value="{{ student[11] }}" disabled>
+                    </div>
+                    <!-- Update button -->
+                    <div class="profile-row" style="margin-top: 25px; text-align: right;">
+                        <button type="button" id="update-button" class="update-button" data-editing="false" onclick="toggleEditMode()">Update</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        </div>
+    </div>
+
+    <!-- Modal for expel confirmation -->
+    <div id="confirmation-modal" class="modal">
+        <div class="modal-content">
+            <p>Are you sure you want to expel this student?</p> <!-- Confirmation message -->
+            <div class="modal-buttons">
+                <button class="cancel-button" onclick="closeModal()">Cancel</button> <!-- Cancel action -->
+                <button class="confirm-button" onclick="confirmExpel()">Expel</button> <!-- Confirm action -->
+            </div>
+        </div>
+    </div>
+
+<!-- Save Changes Modal -->
+    <div id="save-changes-modal" class="modal">
+        <div class="modal-content">
+            <p>Save changes to Student Profile?</p>
+            <div class="modal-buttons">
+                <button class="cancel-button" onclick="closeSaveModal()">Cancel</button>
+                <button class="confirm-button" onclick="confirmSave()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    
+
+</body>
+<script>
+  function validateUpdateForm() {
+    const citizenship = document.querySelector("input[name='citizenship']").value.trim();
+    const phone = document.querySelector("input[name='phone_number']").value.trim();
+    const lrn = document.querySelector("input[name='lrn']").value.trim();
+    const birthdate = document.querySelector("input[name='birthdate']").value.trim();
+
+    // Validate citizenship (should not contain numbers)
+    if (citizenship && /\d/.test(citizenship)) {
+        alert("Citizenship should not contain numbers.");
+        return false;
+    }
+
+    // Validate phone number (must be exactly 11 digits)
+    if (phone && !/^\d{11}$/.test(phone)) {
+        alert("Phone number must be exactly 11 digits.");
+        return false;
+    }
+
+    // Validate LRN (must be exactly 12 digits)
+    if (lrn && !/^\d{12}$/.test(lrn)) {
+        alert("LRN must be exactly 12 digits.");
+        return false;
+    }
+
+    // Validate birthdate (must make the student at least 18 years old)
+    if (birthdate) {
+        const today = new Date();
+        const birthDateObj = new Date(birthdate);
+
+        // Calculate the age
+        let age = today.getFullYear() - birthDateObj.getFullYear();
+        const monthDiff = today.getMonth() - birthDateObj.getMonth();
+        const dayDiff = today.getDate() - birthDateObj.getDate();
+
+        // Adjust age if the current month/day is before the birth month/day
+        if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+            age--;
+        }
+
+        if (age < 18) {
+            alert("The student must be at least 18 years old.");
+            return false;
+        }
+    }
+
+    return true; // Allow form submission if all validations pass
+}
+</script>
+
+{% endblock %}
+

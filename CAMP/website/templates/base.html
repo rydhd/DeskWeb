@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <!-- Declare document type as HTML -->
+    <head>
+        <!-- Document metadata -->
+        <meta charset="utf-8"> <!-- Use UTF-8 character encoding -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Make page responsive to device width -->
+
+        <!-- Include Bootstrap stylesheet (version 4.4.1) -->
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+            integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+            crossorigin="anonymous"
+        />
+
+        <!-- Include Font Awesome for icons -->
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+            crossorigin="anonymous"
+        />
+
+        <!-- Include Google Font "Lexend Deca" -->
+        <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap" rel="stylesheet">
+
+        <!-- Title block for Flask's template inheritance -->
+        <title>{% block title %}Home{% endblock %}</title>
+
+        <style>
+            /* Styles for popup messages */
+            .popup-message {
+                position: fixed; /* Stay fixed at a certain position */
+                bottom: 20px; /* 20px from bottom */
+                right: 20px; /* 20px from right */
+                z-index: 1050; /* Place above other content */
+                min-width: 250px; /* Ensure minimum width of popup */
+                max-width: 350px; /* Prevent exceeding maximum width */
+                border-radius: 8px; /* Rounded corners */
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Add subtle shadow for better visibility */
+                opacity: 0; /* Initially invisible */
+                transition: opacity 0.5s ease-in-out; /* Smooth fade-in/out transition */
+            }
+
+            /* Style specific to alert elements inside the popup */
+            .popup-message .alert {
+                margin-bottom: 0; /* No extra margin */
+                font-family: 'Lexend Deca', sans-serif; /* Match the aesthetic of the page font */
+            }
+
+            /* Animation to show popup */
+            .popup-show {
+                opacity: 1; /* Fully visible popup */
+            }
+        </style>
+    </head>
+    <body style="font-family: 'Lexend Deca', sans-serif;">
+        <!-- Apply "Lexend Deca" font across the whole page -->
+
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+            <!-- Flask template block for inserting page content -->
+        </div>
+
+        <!-- Popup Message -->
+        <div id="popupMessage" class="popup-message" style="display: none;">
+            <!-- Placeholder div for dynamically populated popup content -->
+        </div>
+
+        <!-- Include jQuery -->
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
+        <!-- Include Popper.js (Bootstrap dependency) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+        <!-- Include Bootstrap's JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    
+    </body>
+</html>

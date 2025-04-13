@@ -1,0 +1,121 @@
+{% extends "Student/studentNavbarSchedule.html" %}
+
+{% block title %}Student View Schedule{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #d9d9d9;
+    }
+    .container {
+        margin-top: 1rem;
+        margin-right: 50rem;
+    }
+    .table-responsive {
+        width: 1200px;
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .table {
+        table-layout: fixed;
+        border-collapse: collapse;
+        width: 100%;
+        text-align: center;
+    }
+    .table thead {
+        background-color: #8d0404;
+        color: white;
+    }
+    .table th, .table td {
+        padding: 0.8rem;
+        vertical-align: top;
+        text-align: left;
+        word-wrap: break-word;
+    }
+
+    .table th {
+        font-weight: normal;
+    }
+
+    .table th:first-child, .table td:first-child {
+        width: 15%; /*  Time column */
+    }
+    .table th:not(:first-child), .table td:not(:first-child) {
+        width: 20%; /* Day columns */
+    }
+
+    .table-bordered th,
+    .table-bordered td {
+        border-left: none;
+        border-right: none;
+        border-top: 1px solid #dee2e6;
+        border-bottom: 1px solid #dee2e6;
+    }
+    .table tbody tr:hover {
+        background-color: #f0f0f0;
+    }
+    .calendar-container {
+    position: absolute;
+    top: 110px;
+    right: 40px;
+    background-color: white;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 340px;
+    height: 430px;
+}
+</style>
+<body>
+<div class="container">
+    <h2 class="text-left mb-4" style="color: #8d0404; font-weight: bold;">MY SCHEDULE</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th style="text-align: center">Time</th>
+                    {% for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] %}
+                        <th>{{ day }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for time, daily_schedule in schedule_by_time.items() %}
+                <tr>
+                    <td><p>{{ time }}</p></td>
+                    {% for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] %}
+                        <td>
+                            {% if day in daily_schedule %}
+                                {{ daily_schedule[day] }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="calendar-container">
+    <h5 style="color: #8d0404; font-weight: bold; text-align: center;">CALENDAR</h5>
+    <input type="text" id="calendar" placeholder="Select Date" readonly style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px;">
+</div>
+
+
+<!-- Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+    flatpickr("#calendar", {
+        inline: true,
+        defaultDate: "today"
+    });
+</script>
+</body>
+
+{% endblock %}

@@ -1,0 +1,152 @@
+{% extends "Admin/adminNavbarFaculty.html" %}
+
+{% block title %}Admin View Student List{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #d9d9d9;
+    }
+
+    .container {
+        margin-left: 0;
+        margin-top: 1rem;
+    }
+
+    h3.text-left {
+        font-size: 2rem;
+        color: #8d0404;
+        font-weight: bold;
+    }
+
+    .table-responsive {
+        max-height: 540px;
+        overflow-y: auto;
+        width: 1090px;
+    }
+
+    .table {
+        table-layout: fixed;
+        border-collapse: collapse;
+    }
+
+    .table-row {
+        background-color: white;
+        text-align: left;
+    }
+
+    .table thead {
+        background-color: #8d0404;
+        color: white;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+
+    .table-bordered {
+        border: none;
+    }
+
+    .table-bordered th,
+    .table-bordered td {
+        border-left: none;
+        border-right: none;
+        border-top: 1px solid #dee2e6;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .table-responsive::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    .table-responsive::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb {
+        background-color: #8d0404;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb:hover {
+        background-color: #5a1212;
+    }
+
+    .number {
+        font-weight: normal;
+        width: 30%;
+        
+
+    }
+    .name {
+        font-weight: normal;
+        width: 10px;
+    }
+
+    .stu-id {
+        font-weight: normal;
+        width: 50%;
+    }
+    .back-button {
+        position: absolute; /* Position the button in the container */
+        top: 140px; /* Move it slightly above the container */
+        left: 85.5rem; /* Align it slightly to the left */
+        font-size: 1.8rem; /* Set a larger font for visibility */
+        font-weight: normal; /* Make the "x" a normal weight */
+        color: white; /* White color matching the theme */
+        text-decoration: none; /* Remove underline */
+        cursor: pointer; /* Change cursor to pointer on hover */
+        transition: transform 0.2s ease; /* Add a smooth scaling effect */
+        z-index: 2; /* Ensure the header appears above other content */
+    }
+    .back-button:hover {
+        text-decoration: none;
+        color: white;
+    }
+    
+
+    
+</style>
+
+<div class="container">
+    {% if students %}
+    <a href="{{ url_for('admin.view_faculty') }}" class="back-button">x</a>
+    
+    {% endif %}
+
+    <h3 class="text-left">{{ course_name }}</h3>
+    <h6 class="text-left" style="margin-left: 5px;">Assigned Professor: {{ faculty_name }}</h6>
+
+
+    {% if students %}
+    <div class="table-responsive mt-4">
+        <table class="table table-bordered text-center">
+            <thead>
+                <tr>
+                    <th class="name" style="text-align: left; padding-left: 40px"></th>
+                    <th class="number" style="text-align: left; padding-left: 40px">Enrolled Students</th>
+                    <th class="stu-id" style="text-align: left; padding-left: 40px"></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr class="table-row">
+                    <td style="padding-left: 40px">{{ loop.index }}</td>
+                    <td style="padding-left: 40px">{{ student[1] }}, {{student[2]}} {{student[3]}}</td>
+                    <td style="padding-left: 40px">AU00{{ student[0] }}</td>
+                    <td>
+                        <form action="{{ url_for('admin.remove_student', course_id=course_id, student_id=student[0]) }}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-left mt-3 text-danger">There is no student enrolled in this course.</p>
+    {% endif %}
+</div>
+{% endblock %}

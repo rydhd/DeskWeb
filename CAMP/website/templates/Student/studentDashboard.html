@@ -1,0 +1,385 @@
+{% extends "Student/studentNavbar.html" %}
+{% block content %}
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Same styling as before */
+        head, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        .red-header {
+            position: fixed;
+            top: 0;
+            left: 230px;
+            width: 100%;
+            height: 140px;
+            background: linear-gradient(to right, #d21313, #770404);
+        }
+
+        /* Wrapper for profile section */
+        .profile-wrapper {
+            position: absolute;
+            top: 50px;
+            right: 800px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Container for profile picture */
+        .profile-picture-wrapper {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            position: relative;
+        }
+
+        /* Styling for the profile picture */
+        .profile-picture {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Camera Upload Form */
+        .camera-upload-form {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+
+        /* Styling for the camera icon */
+        .camera-icon {
+            background: rgba(255, 255, 255, 0.8);
+            color: #770404;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            border: 1px solid white;
+            transition: background-color 0.3s ease;
+        }
+
+        .camera-icon:hover {
+            background-color: #770404;
+            color: white;
+        }
+
+        /* Hide the file input */
+        .camera-upload-form input[type="file"] {
+            display: none;
+        }
+
+        /* Container for editable fields */
+        .student-info-container {
+            margin: 0 20px; /* Horizontal margin */
+            margin-top: 230px; /* Adjusted top margin */
+            padding: 20px;
+            border-radius: 10px;
+          
+        }
+
+        /* Two-column layout for the form */
+        .form-row {
+            display: flex;
+            flex-wrap: wrap; /* Allows wrapping in case of smaller screens */
+
+        }
+
+        .form-column {
+            display: flex;
+            flex-direction: column;
+            flex: 0 0 48%; /* Columns take about 48% width with spacing */
+            box-sizing: border-box;
+        }
+
+        .info-row {
+            margin-bottom:5px;
+            font-size: 16px;
+        }
+
+        .info-label {
+            width: 200px;   
+            font-style: san serif ;
+            color: #575656;
+        }
+
+        .editable-input {
+            flex: 1;
+            padding: 10px;
+            font-size: 15px;
+            border: 1px solid #ffffff;
+            color: #770404;
+            border-radius: 5px;       
+ 
+        }
+
+        .editable-input:disabled {
+            background-color: #ffffff;       
+            width: 200px;
+        }
+
+        #sex-display {
+            flex: 1;
+            padding: 10px;
+            font-size: 15px;
+            border: 1px solid #ffffff;
+            color: #770404;
+            border-radius: 5px;    
+        }
+
+       
+        h2 {
+        color: #770404;  
+        font-weight: bold;
+        font-size: 25px;
+        }
+
+
+        /* Update button styling */
+        .update-button {
+            display: block; 
+            margin: 20px auto;
+            margin-right: 80px;
+            padding: 10px 20px;
+            background:  #770404;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .update-button:hover {
+            background-color: #5a1212;
+        }
+
+        /* Profile details styling */
+        .profile-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-left: 20px;
+        }
+
+        .profile-name {
+            margin-top: 70px;
+            font-size: 40px;
+            font-weight: bold;
+            color: #770404;
+        }
+
+        .profile-id {
+            font-size: 20px;
+            color: #770404;
+            margin-top: 0;
+        }
+
+        .line {
+        width: 94%;
+        height: 1px;
+        background-color: rgb(207, 207, 207);
+        margin-top: 0;
+        }
+
+    </style>
+    <script>
+        function toggleEditMode() {
+            const inputs = document.querySelectorAll('.editable-input');
+            const genderDisplay = document.getElementById('sex-display'); // Plain text gender display
+            const genderDropdown = document.getElementById('sex'); // Gender dropdown
+            const updateButton = document.getElementById('update-button');
+            const isEditing = updateButton.dataset.editing === 'true';
+    
+            if (isEditing) {
+                if (validateForm()) { // Validate form before submission
+                    genderDropdown.disabled = false; // Ensure the dropdown is enabled before submission
+                    document.getElementById('update-form').submit(); // Submit the form for saving
+                }
+            } else {
+                inputs.forEach(input => input.disabled = false); // Enable text inputs
+                genderDisplay.style.display = 'none'; // Hide plain text gender
+                genderDropdown.style.display = 'inline-block'; // Show dropdown
+                genderDropdown.disabled = false; // Enable dropdown
+                updateButton.textContent = "Save Changes"; // Change button text
+            }
+            updateButton.dataset.editing = !isEditing; // Toggle editing state
+        }
+    
+        function validateForm() {
+            const cellphoneNo = document.querySelector('input[name="cellphone_no"]').value.trim();
+            const email = document.querySelector('input[name="email"]').value.trim();
+            const birthdate = document.querySelector('input[name="birthdate"]').value.trim();
+    
+            // Validate cellphone number (must be exactly 11 digits)
+            if (cellphoneNo && !/^\d{11}$/.test(cellphoneNo)) {
+                alert("Cellphone number must be exactly 11 digits.");
+                return false;
+            }
+    
+            // Validate email address (must follow standard email format)
+            if (email && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+                alert("Please enter a valid email address.");
+                return false;
+            }
+    
+            // Validate birthdate (must make the student at least 18 years old)
+            if (birthdate) {
+                const today = new Date();
+                const birthDateObj = new Date(birthdate);
+    
+                // Calculate the age
+                let age = today.getFullYear() - birthDateObj.getFullYear();
+                const monthDiff = today.getMonth() - birthDateObj.getMonth();
+                const dayDiff = today.getDate() - birthDateObj.getDate();
+    
+                // Adjust age if the current month/day is before the birth month/day
+                if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+                    age--;
+                }
+    
+                if (age < 18) {
+                    alert("You must be at least 18 years old.");
+                    return false;
+                }
+            }
+    
+            return true; // Allow form submission if all validations pass
+        }
+    
+        // Prevent typing beyond the allowed number of digits
+        function enforceMaxLength(event) {
+            const maxLength = event.target.getAttribute('maxlength');
+            if (event.target.value.length >= maxLength) {
+                event.preventDefault();
+            }
+        }
+    </script>
+</head>
+<body>
+    <!-- Red Header -->
+    <div class="red-header"></div>
+
+    <!-- Profile Section -->
+    <div class="profile-wrapper">
+        <div class="profile-picture-wrapper">
+            <img src="{{ url_for('static', filename=session.get('student_picture', 'default-profile.jpg')) }}"
+                 alt="Profile Picture"
+                 class="profile-picture">
+
+            <!-- Camera Upload Form -->
+            <form action="{{ url_for('student.upload_student_picture', student_id=session.get('student_id')) }}"
+                  method="POST" enctype="multipart/form-data" class="camera-upload-form">
+                <label for="profile-picture-input" class="camera-icon">
+                    <i class="fas fa-camera"></i>
+                </label>
+                <input id="profile-picture-input" type="file" name="profile_picture" onchange="this.form.submit()">
+            </form>
+        </div>
+
+        <!-- Student Full Name and ID -->
+        <div class="profile-details">
+            <div class="profile-name">
+                {{ session.get('student_name', 'Student Name') }}
+            </div>
+            <div class="profile-id">
+                AU00{{ session.get('student_id', '0000') }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Editable Information Section -->
+    <div class="student-info-container">
+        <h2>My Information</h2>
+        <form id="update-form" action="{{ url_for('student.update_student_details', student_id=session.get('student_id')) }}" method="POST">
+            <div class="form-row">
+                <!-- Left Column -->
+                <div class="form-column">
+                    <div class="info-row">
+                        <label class="info-label">First Name:</label>
+                        <input type="text" name="first_name" class="editable-input" value="{{ student_details.get('first_name', '') }}" disabled>
+                    </div>
+                    <div class="line"></div>
+                    <div class="info-row">
+                        <label class="info-label">Middle Name:</label>
+                        <input type="text" name="middle_name" class="editable-input" value="{{ student_details.get('middle_name', '') }}" disabled>
+                    </div>
+                    <div class="line"></div>
+                    <div class="info-row">
+                        <label class="info-label">Last Name:</label>
+                        <input type="text" name="last_name" class="editable-input" value="{{ student_details.get('last_name', '') }}" disabled>
+                    </div>
+                    <div class="line"></div>
+                    <div class="info-row">
+                        <label class="info-label">Birthdate:</label>
+                        <input type="date" name="birthdate" class="editable-input" value="{{ student_details.get('birthdate', '') }}" disabled>
+                    </div>
+                    <div class="line"></div>
+                    <div class="info-row">
+                        <label class="info-label">Sex:</label>
+                        <span id="sex-display">{{ student_details.get('gender', '') }}</span>
+                        <select id="sex" name="gender" required style="display: none;" disabled>
+                            <option value="">Select</option>
+                            <option value="Male" {% if student_details.get('sex') == 'Male' %}selected{% endif %}>Male</option>
+                            <option value="Female" {% if student_details.get('sex') == 'Female' %}selected{% endif %}>Female</option>
+                        </select>
+                    </div>
+                    <div class="line"></div>
+                    <div class="info-row">
+                        <label class="info-label">Cellphone No:</label>
+                        <input type="text" name="cellphone_no" class="editable-input" value="{{ student_details.get('cellphone_no', '') }}" maxlength="11" onkeypress="enforceMaxLength(event)" disabled>
+                    </div>
+                    <div class="line"></div>
+                    <div class="info-row">
+                        <label class="info-label">Email Address:</label>
+                        <input type="email" name="email" class="editable-input" value="{{ student_details.get('email', '') }}" disabled>
+                    </div>
+                    <div class="line"></div>
+                    <div class="info-row">
+                        <label class="info-label">Address:</label>
+                        <input type="text" name="address" class="editable-input" value="{{ student_details.get('address', '') }}" disabled>
+                    </div>
+                    <div class="line"></div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="form-column">
+                    <div class="info-row">
+                        <label class="info-label">Username:</label>
+                        <input type="text" name="username" class="editable-input" value="{{ student_details.get('username', '') }}" disabled>
+                    </div>
+                    <div class="line"></div>
+                    <div class="info-row">
+                        <label class="info-label">Password:</label>
+                        <input type="text" name="password" class="editable-input" value="{{ student_details.get('password', '') }}" disabled>
+                    </div>
+                    <div class="line"></div>
+                    <div class="info-row">
+                        <label class="info-label">LRN:</label>
+                        <input type="text" name="lrn" class="editable-input" value="{{ student_details.get('lrn', '') }}" maxlength="12" onkeypress="enforceMaxLength(event)" disabled>
+                    </div>
+                    <div class="line"></div>
+                    <div class="info-row">
+                        <label class="info-label">Citizenship:</label>
+                        <input type="text" name="citizenship" class="editable-input" value="{{ student_details.get('citizenship', '') }}" disabled>
+                    </div>
+                    <div class="line"></div>
+                    <div class="info-row">
+                        <label class="info-label">Religion:</label>
+                        <input type="text" name="religion" class="editable-input" value="{{ student_details.get('religion', '') }}" disabled>
+                    </div>
+                    <div class="line"></div>
+                </div>
+            </div>
+            <button type="button" class="update-button" id="update-button" onclick="toggleEditMode()" data-editing="false">Update Profile</button>
+        </form>
+    </div>
+</body>
+{% endblock %}

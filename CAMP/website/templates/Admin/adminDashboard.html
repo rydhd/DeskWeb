@@ -1,0 +1,639 @@
+{% extends "Admin/adminNavbar.html" %} <!-- Extends a base template 'adminNavbar.html' -->
+
+{% block content %}
+<head>
+    <style>
+        /* Define background color and general styles */
+        body {
+            background-color: #d9d9d9; /* Light gray background color for the page */
+        }
+
+        /* Styles for the header displaying "Student List" */
+        .students-header {
+            font-weight: bold; /* Make the text bold */
+            color: #8d0404; /* Dark maroon color */
+        }
+
+        /* Styles for the "Enroll a Student" button */
+        .enroll-btn {
+            background-color: #8d0404; /* Button background color: dark maroon */
+            color: white; /* Set the text color to white */
+            border-radius: 0;
+        }
+
+        .enroll-btn:hover {
+            scale: 1.05; /* Slight zoom effect on hover */
+            color: white; /* Ensure the text remains white on hover */
+            border-radius: 0;
+        }
+
+        /* Styling the search bar inside the search form */
+        .search-form .form-control {
+            border: 1px solid #8d0404; /* Add a maroon border */
+            outline: none; /* Remove default focus outline */
+            border-radius: 0;
+        }
+
+        /* Styles for the responsive table container */
+        .responsive-table {
+            max-height: 450px; /* Maximum height for the table, enable scrolling if exceeded */
+            overflow-y: auto; /* Add vertical scrollbar if content exceeds height */
+            position: relative;
+        }
+
+        /* Set column widths for the table's specific columns */
+        .fixed-col {
+            width: 25%; /* Default width for the first column */
+        }
+
+        .fixed-col:nth-child(2) {
+            width: 15%; /* Specific width for the second column */
+        }
+
+        .fixed-col:nth-child(3) {
+            width: 15%; /* Specific width for the third column */
+        }
+
+        /* Styling for the scrollbars inside the table */
+        .table-responsive::-webkit-scrollbar {
+            width: 10px; /* Width of the scrollbar */
+            height: 10px; /* Height of the scrollbar */
+        }
+
+        .table-responsive::-webkit-scrollbar-track {
+            background: transparent; /* Transparent background for the track */
+        }
+
+        .table-responsive::-webkit-scrollbar-thumb {
+            background-color: #8d0404; /* Maroon scrollbar thumb */
+        }
+
+        .table-responsive::-webkit-scrollbar-thumb:hover {
+            background-color: #5a1212; /* Dark maroon on hover */
+        }
+
+        /* Sticky header for the table */
+        .table thead th {
+            font-weight: normal;
+            background-color: #8d0404; /* Dark maroon background */
+            color: white; /* White text for visibility */
+            position: sticky; /* Keep header visible on scroll */
+            top: 0; /* Position header at the top */
+            z-index: 1; /* Ensure header is above other elements */
+        }
+
+        .table-bordered {
+            border: none; /* Removes the border around the table */
+        }
+
+        .table-bordered th,
+        .table-bordered td {
+            border-left: none; /* Remove the vertical borders */
+            border-right: none; /* Remove the vertical borders */
+            border-top: 1px solid #dee2e6; /* Keep horizontal borders */
+            border-bottom: 1px solid #dee2e6; /* Keep horizontal borders */
+        }
+
+        /* Add extra padding to the first column of the table */
+        .table tbody td:first-child {
+            text-align: left; /* Align text to the left for readability */
+            padding-left: 50px; /* Add spacing to the left */
+        }
+
+        .table tbody tr {
+            background-color: white; /* White background for rows */
+            border-bottom: 1px solid #ddd; /* Add light gray dividers between rows */
+        }
+
+        .table tbody tr:hover {
+            background-color: #f9f9f9; /* Light gray background color on hover */
+        }
+
+        /* Color styles for text used for error or important messages */
+        .text-danger {
+            color: red; /* Standard red for error/warning messages */
+        }
+
+        /* Styling for the "Clear Search" button */
+        .clear-search-btn {
+            background-color: white; /* White background */
+            border: 1px solid #8d0404; /* Maroon border */
+            color: #8d0404; /* Text color: dark maroon */
+            margin-top: 20px; /* Add some margin above */
+            margin-bottom: 50px; /* Add some margin below */
+            border-radius: 0;
+        }
+
+        /* Hover effect for the "Clear Search" button */
+        .clear-search-btn:hover {
+            background-color: #8d0404; /* Change background to dark maroon */
+            color: white; /* Change text color to white */
+            border-radius: 0;
+        }
+
+        /* Styling the clickable "View Student" link */
+        .view-student-link {
+            color: black; /* Default color */
+            text-decoration: none; /* Remove underline */
+            cursor: pointer; /* Indicate it's clickable */
+        }
+
+        .view-student-link:hover {
+            text-decoration: underline; /* Add underline on hover */
+            color: #8d0404; /* Change color to maroon on hover */
+        }
+
+        /* Adjust text alignment for student ID column */
+        .camp-id-column {
+            text-align: left; /* Align text to the left */
+            padding-left: 117px !important; /* Add extra left padding */
+        }
+
+        /* Styles for the student count container with an image */
+        .student-count-container {
+            position: relative; /* Enable absolute positioning of overlay text */
+            text-align: center; /* Center content in the container */
+        }
+
+        .student-count-container .overlay-text {
+            position: absolute; /* Overlay the text */
+            top: 50%; /* Center vertically */
+            left: 50%; /* Center horizontally */
+            transform: translate(-50%, -50%); /* Perfectly center the text */
+        }
+
+        /* Flexbox container for male and female student counts */
+        .counts-container {
+            display: flex; /* Use flexbox for row layout */
+            justify-content: center; /* Horizontally center items */
+            align-items: center; /* Vertically align items */
+            gap: 20px; /* Space between items */
+            margin-top: 10px; /* Space above the container */
+        }
+
+        /* Large font size for the overall student count */
+        .students-count {
+            font-size: 5rem; /* Really large text */
+            color: black; /* Dark maroon color */
+            position: relative; /* Allows for overlay content */
+            top: -10px; /* Moves the count away from the top */
+            left: 80px; /* Moves the count away from the left */
+        }
+
+        .fac-count {
+            font-size: 5rem; /* Really large text */
+            color: black; /* Dark maroon color */
+            position: absolute; /* Allows for overlay content */
+            top: 80px; /* Moves the count away from the top */
+            left: 300px; /* Moves the count away from the left */
+        }
+
+
+        /* Styles for a simple image container (used for faculty count) */
+        .faculty-count-container {
+            position: relative; /* Allows image-based layout flexibility */
+            text-align: center; /* Center content for better visuals */
+        }
+
+        /* Styling the female student count */
+        .female-count {
+            font-weight: bold; /* Bold text */
+            font-size: 2rem; /* Smaller than total count */
+            color: black; /* Maroon colored text */
+            position: relative; /* Allows for overlay content */
+            top: 33px; /* Moves the count away from the top */
+            left: -60px; /* Moves the count away from the left */
+        }
+
+        /* Styling the male student count */
+        .male-count {
+            font-weight: bold; /* Bold text */
+            font-size: 2rem; /* Smaller than total count */
+            color: black; /* Maroon colored text */
+            position: relative; /* Allows for overlay content */
+            top: 33px; /* Moves the count away from the top */
+            right: -86px; /* Moves the count away from the left */
+        }
+    .modal-student {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .modal-content-student {
+        height: 630px; /* Sets a fixed height for the container. */
+        width: 900px; /* Makes the container span the full page width. */
+        max-width: 1200px; /* Limits the maximum width of the container. */
+        padding: 0; /* Removes padding from the container. */
+        font-family: Lexend Deca, sans-serif; /* Applies a clean, modern font style. */
+        background-color: #ffffff; /* Sets background color to dark red. */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .title {
+        width: 100%;
+        padding: 3px;
+        background-color: #8d0404;
+        font-weight: bold;
+        color: white;
+        font-size: 1.5rem;
+        padding-top: 15px;
+        padding-left: 30px;
+        padding-bottom: 5px;
+        margin-bottom: 10px;
+    }
+
+
+    .btn2-student {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #8d0404;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    /* Styles for the form used in the page */
+    .form-student {
+        height: 550px; /* Sets the height of the form to match the container. */
+        width: 100%; /* Makes the form take up full width of the container. */
+        max-width: 100%; /* Overrides any max-width to ensure full span. */
+        border: 0px solid #ddd; /* Removes any border. */
+        padding: 15px; /* Adds padding around the form elements. */
+        display: flex; /* Enables a flex layout for form contents. */
+        flex-wrap: wrap; /* Allows form contents to wrap to the next row if necessary. */
+        color: #8d0404; /* Dark red text color. */
+        
+    }
+
+    /* Styles for individual form groups (label + input/textarea/select) */
+    .form-group {
+        display: flex; /* Enables flex layout. */
+        flex-direction: column; /* Arranges items in a vertical stack. */
+        flex: 1 1 calc(50% - 10px); /* Sets width to 50% minus the gap value. */
+        padding-right: 0;
+        
+    }
+    /* Grid layout for aligned items */
+    .grid-items {
+        display: grid; /* Enables grid layout. */
+        grid-template-columns: 1fr 1fr; /* Creates two equal-width columns. */
+        position: relative; /* Relative positioning for fine-tuning. */
+        left: -72px; /* Slightly shifts the grid left. */
+        grid-column-gap: 30px; /* Adds spacing between the columns. */
+    }
+    #first_name{
+        width: 300px; /* Wider text area for address input. */
+    }
+    #middle_name{
+        width: 300px; /* Wider text area for address input. */
+    }
+    #last_name{
+        width: 300px; /* Wider text area for address input. */
+    }
+    #sex{
+        width: 300px; /* Wider text area for address input. */
+    }
+    #citizenship{
+        width: 300px; /* Wider text area for address input. */
+    }
+    #lrn{
+        width: 300px; /* Wider text area for address input. */
+    }
+    #phone_number{
+        width: 300px; /* Wider text area for address input. */
+    }
+    #emailadd{
+        width: 300px; /* Wider text area for address input. */
+    }
+    /* Overrides specific IDs for consistent field size */
+    #address {
+        width: 300px; /* Wider text area for address input. */
+        height: 110px; /* Expand the height of input field */
+    }
+
+    #birthdate {
+        width: 135px; /* Sets a narrower width for date input fields. */
+    }
+
+    #religion {
+        width: 135px; /* Consistent width for religion input fields. */
+    }
+
+    #username {
+        width: 135px; /* Narrower width for username field. */
+    }
+
+    #password {
+        width: 135px; /* Fixed width for password field for layout consistency. */
+    }
+
+    /* Styling for labels inside the form */
+    label {
+        margin-bottom: 0; /* Removes margin below the label text. */
+        font-size: 14px; /* Medium size for form labels. */
+        font-weight: bold; /* Bold to emphasize the label text. */
+    }
+
+    /* Shared styling for input, select, and textarea elements */
+    input, select, textarea {
+        width: 60%; /* Sets the width to 60% of its container. */
+        padding: 8px; /* Adds padding inside the fields for readability. */
+        margin: 0; /* Removes margin. */
+        border: 1px solid #ccc; /* Adds a light gray border. */
+        font-size: 14px; /* Medium font size. */
+        color: #8d0404; /* Dark red font color for consistency. */
+        line-height: 1.2; /* Sets line height for readability. */
+    }
+
+    /* Additional styling specifically for textareas */
+    textarea {
+        resize: vertical; /* Allows vertical resizing only. */
+    }
+
+    /* Focus styles to highlight active inputs, selects, or textareas */
+    input:focus, select:focus, textarea:focus {
+        border-color: #8d0404; /* Highlights the border with dark red. */
+        outline: #8d0404; /* Removes default outline and colors it dark red. */
+        box-shadow: 0 0 3px rgba(255, 0, 43, 0.8); /* Adds a subtle glowing effect. */
+    }
+    .button-container-admit {
+        margin-top: 1rem; /* Space above the button */
+        display: flex; /* Allows alignment */
+        justify-content: flex-start; /* Align to the left */
+    }
+    .button-admit{
+        background-color: #8d0404; /* Matches the header background color */
+        color: white; /* White text for visibility */
+        border: 1px solid; /* Removes border */
+        padding: 10px 20px; /* Adds padding for better appearance */
+        margin-left: 628px;
+        font-size: 0.9rem; /* Slightly smaller text size */
+        cursor: pointer; /* Changes the cursor to a pointer on hover */
+    }
+    
+
+
+
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <!-- Row for the statistics with student count and faculty count -->
+        <div class="row mb-4">
+            <!-- Student count container -->
+            <div class="col-md-6">
+                <div class="student-count-container">
+                    <!-- Background image displaying student count -->
+                    <img src="{{ url_for('static', filename='student_count.png') }}" alt="Student Count">
+                    <div class="overlay-text">
+                        <h2 class="students-count">{{ student_counts[0] }}</h2> <!-- Total student count -->
+                        <div class="counts-container">
+                            <div>
+                                <h5 class="female-count">{{ student_counts[2] }}</h5> <!-- Female count -->
+                            </div>
+                            <div>
+                                <h5 class="male-count">{{ student_counts[1] }}</h5> <!-- Male count -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Faculty count container -->
+            <div class="col-md-6">
+                <div class="faculty-count-container">
+                    <!-- Background image for the faculty count -->
+                    <img src="{{ url_for('static', filename='faculty_count.png') }}" alt="Faculty Count">
+                    <!-- Overlay text to display the faculty count -->
+                    <div class="faculty-count">
+                        <h2 class="fac-count">{{ faculty_count }}</h2> <!-- Total faculty count -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section for student list, search bar, and enroll button -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="students-header">STUDENT LIST</h2> <!-- Student List header -->
+            <div class="d-flex align-items-center">
+                <!-- Button for enrolling a student -->
+                <div class="add-faculty-container">  <!-- Add Faculty button container -->
+                    <button class="btn enroll-btn mr-2" onclick="showAdmitStudentModal()">Admit a Student</button>  <!-- Button to trigger the modal -->
+                </div>
+                <!-- Search form -->
+                <form method="POST" class="form-inline search-form">
+                    <input type="text" class="form-control" name="search_query"
+                        value="{{ search_query or '' }}" placeholder="Search Student"> <!-- Search input -->
+                </form>
+            </div>
+        </div>
+
+        <!-- Student table or "no students found" message -->
+        {% if students %}
+            <div class="table-responsive mt-4 responsive-table">
+                <table class="table table-bordered text-center fixed-table">
+                    <thead class="thead">
+                        <tr>
+                            <th class="fixed-col">Student Name</th> <!-- Full Name column header -->
+                            <th class="fixed-col">Student ID</th> <!-- Student ID column header -->
+                            <th class="fixed-col">Action</th> <!-- Action column header -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                            <tr>
+                                <!-- Display student's full name -->
+                                <td>{{ student[1] }} </td>
+                                <td class="camp-id-column">AU00{{ student[0] }}</td> <!-- Student ID -->
+                                <td>
+                                    <a href="{{ url_for('admin.view_student', student_id=student[0]) }}" class="view-student-link">View</a>
+ <!-- Action link -->
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-center" style="color: #8d0404">No students found.</p> <!-- Message when no students -->
+        {% endif %}
+
+        <!-- Clear search button if there is a search query -->
+        {% if search_query %}
+            <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-secondary mt-3 mb-5 clear-search-btn">
+                Clear Search
+            </a>
+        {% endif %}
+    </div>
+</body>
+<!-- Modal for admitting a student -->
+<div id="admitStudentModal" class="modal-student" style="display: none;">
+    <div class="modal-content-student">
+        <div class="title">
+            <h2>ADMIT A STUDENT</h2>
+        </div>
+        <button class="btn2-student" onclick="closeAdmitStudentModal()">x</button>
+        <div class="container">
+        
+            <form method="POST" action="{{ url_for('admin.add_student') }}" onsubmit="return validateForm()" class="form-student">
+            <!-- First column -->
+            <div class="form-group" style="padding-left: 50px;">
+                <label for="first_name">First Name:</label>
+                <input type="text" id="first_name" name="first_name" required>
+            </div>
+        
+            <div class="form-group" style="padding-left: 50px; ">
+                <label for="citizenship">Citizenship:</label>
+                <input type="text" id="citizenship" name="citizenship" oninput="validateForm()">
+                <small id="citizenshipError"></small>
+            </div>
+            
+            <div class="form-group" style="padding-left: 50px; ">
+                <label for="middle_name">Middle Name:</label>
+                <input type="text" id="middle_name" name="middle_name">
+            </div>
+        
+            <div class="form-group" style="padding-left: 50px; ">
+                <label for="lrn">Learner Reference Number (LRN):</label>
+                <input type="text" id="lrn" name="lrn" pattern="\d{12}" title="LRN must be exactly 12 digits" maxlength="12">
+            </div>
+        
+            <div class="form-group" style="padding-left: 50px; ">
+                <label for="last_name">Last Name:</label>
+                <input type="text" id="last_name" name="last_name" required>
+            </div>
+        
+            <div class="form-group" style="padding-left: 50px; ">
+                <label for="phone_number">Phone Number:</label>
+                <input type="text" id="phone_number" name="phone_number" pattern="\d{11}" title="Phone number must be exactly 11 digits" maxlength="11">
+            </div>
+        
+            <div class="form-group" style="padding-left: 50px; ">
+                <label for="sex">Sex:</label>
+                <select id="sex" name="sex" required>
+                    <option value="">Select</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+        
+            <div class="form-group" style="padding-left: 50px; ">
+                <label for="emailadd">Email Address:</label>
+                <input type="email" id="emailadd" name="emailadd" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" title="Enter a valid email address">
+            </div>
+        
+            <div class="form-group" style="padding-left: 50px; ">
+                <label for="address">Address:</label>
+                <textarea id="address" name="address"></textarea>
+            </div>
+        
+            <!-- Second column -->
+            <div class="grid-items">
+            <div class="form-group">
+                <label for="birthdate">Birthdate:</label>
+                <input type="date" id="birthdate" name="birthdate">
+            </div>
+        
+            <!-- Religion and Password moved here -->
+            <div class="form-group">
+                <label for="religion">Religion:</label>
+                <input type="text" id="religion" name="religion">
+            </div>
+        
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required maxlength="50">
+            </div>
+        
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required maxlength="10">
+            </div>
+            </div>
+        
+                <div class="buttons-container-admit">
+                    <button type="submit" class="button-admit">Admit Student</button>
+                </div>
+        </form>
+        
+        </div>
+    </div>
+</div>
+
+<script>
+    // Show the modal
+    function showAdmitStudentModal() {
+        document.getElementById("admitStudentModal").style.display = "flex";
+    }
+
+    // Close the modal
+    function closeAdmitStudentModal() {
+        document.getElementById("admitStudentModal").style.display = "none";
+    }
+</script>
+
+<script>
+    // Validates the form before submission
+    function validateForm() {
+        let citizenship = document.getElementById("citizenship").value.trim();
+        let phone = document.getElementById("phone_number").value.trim();
+        let lrn = document.getElementById("lrn").value.trim();
+        let birthdate = document.getElementById("birthdate").value.trim();
+
+        // Validate citizenship (should not contain numbers)
+        if (citizenship && /\d/.test(citizenship)) {
+            alert("Citizenship should not contain numbers.");
+            return false;
+        }
+
+        // Validate phone number (must be exactly 11 digits)
+        if (phone && !/^\d{11}$/.test(phone)) {
+            alert("Phone number must be exactly 11 digits.");
+            return false;
+        }
+
+        // Validate LRN (must be exactly 12 digits)
+        if (lrn && !/^\d{12}$/.test(lrn)) {
+            alert("LRN must be exactly 12 digits.");
+            return false;
+        }
+
+        // Validate birthdate (must make the student at least 18 years old)
+        if (birthdate) {
+            const today = new Date();
+            const birthDateObj = new Date(birthdate);
+
+            // Calculate the age
+            let age = today.getFullYear() - birthDateObj.getFullYear();
+            const monthDiff = today.getMonth() - birthDateObj.getMonth();
+            const dayDiff = today.getDate() - birthDateObj.getDate();
+
+            // Adjust age if the current month/day is before the birth month/day
+            if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+                age--;
+            }
+
+            if (age < 18) {
+                alert("The student must be at least 18 years old.");
+                return false;
+            }
+        }
+
+        return true; // Allow form submission if all validations pass
+    }
+</script>
+
+{% endblock %}
