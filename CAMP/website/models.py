@@ -489,11 +489,12 @@ class Faculty:
         faculty = cur.fetchone()
         cur.close()
         return faculty
-    
+
     @staticmethod
     def get_students_by_faculty(faculty_id):
         """
         Retrieve students and course name for the faculty's assigned course.
+        Even if no students are enrolled, return the course name.
         """
         cur = mysql.connection.cursor()
         cur.execute("""
@@ -509,9 +510,9 @@ class Faculty:
                 sc.score_written,  
                 sc.score_project,  
                 sc.score_exam      
-            FROM student_tbl s
-            JOIN apply_tbl a ON s.stu_id = a.stu_id_fk
-            JOIN course_tbl c ON a.cou_id_fk = c.cou_id
+            FROM course_tbl c
+            LEFT JOIN apply_tbl a ON c.cou_id = a.cou_id_fk
+            LEFT JOIN student_tbl s ON a.stu_id_fk = s.stu_id
             LEFT JOIN scores_tbl sc ON s.stu_id = sc.stu_id_fk AND c.cou_id = sc.cou_id_fk
             WHERE c.fac_id_fk = %s
             ORDER BY s.stu_last_name ASC
@@ -519,9 +520,9 @@ class Faculty:
         students = cur.fetchall()
         cur.close()
 
-        course_name = students[0][5] if students else "No Course Assigned"
+        course_name = students[0][5] if students else "No Course Assigned"  # index 5 is course_name
         return students, course_name
-        
+
     @staticmethod
     def get_student_popup(student_id):
         """Retrieve full student details by student_id."""

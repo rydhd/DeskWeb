@@ -227,11 +227,11 @@
     
 </style>
 <body>
-    <form method="POST" action="/faculty/search_students" class="form-inline search-form">
-        <input type="text" class="form-control" name="search_query"
+    <form method="POST" action="/faculty/search_students" class="form-inline search-form" >
+        <input type="text" class="form-control" style="border-radius: 0;" name="search_query"
             value="{{ search_query or '' }}" placeholder="Search Student">
     </form>
-    <a href="/faculty/add_grades" class="btn enroll-btn mr-2">
+    <a href="/faculty/add_grades" class="btn enroll-btn" style="border-radius: 0;">
         Add Grade
     </a>
    <div class="container">
@@ -240,7 +240,7 @@
          <table class="table table-bordered text-center">
                <thead>
                   <tr>
-                     <th class="index""></th>
+                     <th class="index" style ="text-align: left;"></th>
                      <th class="profile" style="text-align: left;"></th>
                      <th class="name" style="text-align: left;">Student Name</th>
                      <th class="stu-id" style="text-align: left;">Student ID</th>
@@ -248,34 +248,35 @@
                   </tr>
                </thead>
                <tbody>
-                  {% if students %}
-                      {% for student in students %}
-                      <tr class="table-row" data-id="{{ student[0] }}">
-                          <td style="text-align: center;">{{ loop.index }}</td>
-                          <td>
-                               {% if student[4] %}
-                                  <img src="{{ url_for('static', filename=student[4]) }}" 
-                                       alt="Profile Picture" class="profile-pic">
-                               {% else %}
-                                  <div class="empty-profile"></div>
-                               {% endif %}
-                          </td>
-                          <td>{{ student[1] }}, {{ student[2] }} {{ student[3] }}</td>
-                          <td>AU00{{ student[0] }}</td>
-                      </tr>
-                      {% endfor %}
-                  {% else %}
-                      <tr>
-                          <td colspan="4">No students enrolled in your course.</td>
-                      </tr>
-                  {% endif %}
-               </tbody>
+                {% if students and students[0][0] is not none %}
+                    {% for student in students %}
+                        <tr class="table-row" data-id="{{ student[0] }}">
+                            <td style="text-align: center;">{{ loop.index }}</td>
+                            <td>
+                                {% if student[4] %}
+                                    <img src="{{ url_for('views.profile_pictures', filename=student[4]) }}"
+                                         alt="Profile Picture" class="profile-pic">
+                                {% else %}
+                                    <img src="{{ url_for('views.profile_pictures', filename='student_default.png') }}"
+                                         alt="Profile Picture" class="profile-pic">
+                                {% endif %}
+                            </td>
+                            <td>{{ student[1] }}, {{ student[2] }} {{ student[3] }}</td>
+                            <td>AU00{{ student[0] }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="4">No students enrolled in your course.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
          </table>
 
            <!-- Clear Search Button -->
             {% if search_query %}
             <form method="POST" action="/faculty/search_students">
-                <button type="submit" name="clear_search" value="true" class="btn btn-secondary mt-3">Clear Search</button>
+                <button type="submit" name="clear_search" value="true" class="btn btn-secondary mt-3" style="border-radius: 0;">Clear Search</button>
             </form>
             {% endif %}
 
@@ -336,13 +337,12 @@
                            let emptyProfile = document.getElementById("popup-empty-profile"); // Get the empty profile div
 
                            if (data.profile_picture) {
-                              profilePic.src = `/static/${data.profile_picture}`;
-                              profilePic.style.display = "block";  // Show image
-                              emptyProfile.style.display = "none"; // Hide empty profile
-                           } else {
-                              profilePic.style.display = "none";  // Hide image
-                              emptyProfile.style.display = "block"; // Show empty profile
-}
+                                profilePic.src = `/profile_pictures/${data.profile_picture}`;
+                            } else {
+                                profilePic.src = `/profile_pictures/student_default.png`;
+                            }
+                            profilePic.style.display = "block";  // Always show image
+                            emptyProfile.style.display = "none"; // Always hide the empty profile div
 
    
                            // Show the popup

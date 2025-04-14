@@ -236,52 +236,51 @@ def view_student(student_id):
     # Render the student profile page with student details
     return render_template("Admin/adminViewStudent.html", student=student)
 
-@admin.route('/admin/upload_student_picture/<int:student_id>', methods=['GET', 'POST'])
+@admin.route('/admin/upload_student_picture/<int:student_id>', methods=['POST'])
 def upload_student_picture(student_id):
-    """Handle the uploading and saving of a student's profile picture."""
-    from werkzeug.utils import secure_filename #Pang-secure at handle ng file names
-    import os #In-import 'yung OS para ma-handle 'yung local file directory
+    from PIL import Image
+    import os
 
-    # Sinetup 'yung directory ng project at paglalagyan ng pictur
-    base_path = os.path.dirname(os.path.realpath(__file__))  # Get the path to 'website'
-    static_path = os.path.join(base_path, 'static')  # Define the absolute path to the `static` folder
-    upload_folder = os.path.join(static_path, 'uploads')  # Ensure the uploads folder is under the correct static folder
-
-    # Check if a file is uploaded
     if 'profile_picture' not in request.files or request.files['profile_picture'].filename == '':
         flash('No file selected!', category='error')
         return redirect(url_for('admin.view_student', student_id=student_id))
 
-    # Retrieve the file and process it
     file = request.files['profile_picture']
-    allowed_extensions = {'jpg', 'jpeg', 'png'}  # Allowed file types (extensions)
- 
-    # Pang-validate lang kung tamang file format ang pinili
+    allowed_extensions = {'jpg', 'jpeg', 'png'}
+
     if '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() not in allowed_extensions:
         flash("Invalid file type. Only JPG, JPEG, and PNG are allowed.", category="error")
         return redirect(url_for('admin.view_student', student_id=student_id))
 
-    # Secure the file name and define upload path
-    filename = secure_filename(f"student_{student_id}.jpg")  # Ni-rename 'yung piniling picture as student_<id>.jpg
-    os.makedirs(upload_folder, exist_ok=True)  # Gagawa ng folder na paglalagyan (incase kung wala pang nagagawa)
+    try:
+        # Tkinter naming format
+        new_filename = f"student_{student_id}.png"
 
-    # Save the file to the uploads folder inside the static folder
-    file_path = os.path.join(upload_folder, filename)
-    file.save(file_path)
+        # Path to shared_assets/profile_pictures
+        base_path = os.path.dirname(os.path.realpath(__file__))
+        profile_picture_folder = os.path.abspath(os.path.join(base_path, '../../shared_assets/profile_pictures'))
+        os.makedirs(profile_picture_folder, exist_ok=True)
 
-    # Update the student record in the database
-    relative_file_path = f"uploads/{filename}"  # Use a relative path for database storage
-    cur = mysql.connection.cursor()
-    cur.execute("""
-        UPDATE student_tbl
-        SET profile_picture = %s
-        WHERE stu_id = %s
-    """, (relative_file_path, student_id))  # Store relative path in the database
-    mysql.connection.commit()  # Commit the changes
-    cur.close()
+        # Convert and save image as PNG
+        img = Image.open(file.stream).convert("RGBA")
+        img.save(os.path.join(profile_picture_folder, new_filename), "PNG")
 
-    flash("Profile picture uploaded successfully!", category="success")
-    return redirect(url_for('admin.view_student', student_id=student_id))
+        # Store filename only
+        cur = mysql.connection.cursor()
+        cur.execute("""
+            UPDATE student_tbl
+            SET profile_picture = %s
+            WHERE stu_id = %s
+        """, (new_filename, student_id))
+        mysql.connection.commit()
+        cur.close()
+
+        flash("Profile picture uploaded successfully!", category="success")
+        return redirect(url_for('admin.view_student', student_id=student_id))
+
+    except Exception as e:
+        flash(f"Error uploading profile picture: {e}", category="error")
+        return redirect(url_for('admin.view_student', student_id=student_id))
 
 @admin.route('/admin/update_student/<int:student_id>', methods=['POST'])
 def update_student(student_id):

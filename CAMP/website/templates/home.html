@@ -52,10 +52,8 @@
             top: 40%; /* Positions the div 40% from the top of the viewport */
             right: 23%; /* Positions the div 23% from the right side */
             position: absolute; /* Allows precise positioning within the viewport/container */
-
             background-color: rgba(255, 250, 250, 0.37); /* Semi-transparent white background for visual contrast */
             padding: 20px; /* Adds space inside the div between its content and borders */
-            border-radius: 10px; /* Rounds the corners for a cleaner UI */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow for a floating effect */
         }
 
@@ -71,6 +69,7 @@
             width: 110px; /* Sets a fixed width for the buttons */
             background-color: white; /* Sets the button background color to white */
             color: #7b1818; /* Sets the text color to a dark red shade */
+            border-radius: 0;
         }
 
         /* Adds spacing between consecutive buttons */
@@ -86,7 +85,7 @@
 
 
 <!-- CAMP Logo -->
-        <img src="{{ url_for('static', filename='camp_logo.png') }}" alt="CAMP Logo" class="camp-logo"/>
+        <img src="{{ url_for('static', filename='CAMPLogoWhite.png') }}" alt="CAMP Logo" class="camp-logo"/>
     <!-- Main content begins -->
     <div class="d-flex flex-column align-items-center positioned-div">
         <!-- A div container centered and styled using custom and Bootstrap classes -->
