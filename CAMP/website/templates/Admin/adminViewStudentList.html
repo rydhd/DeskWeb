@@ -149,4 +149,48 @@
     <p class="text-left mt-3 text-danger">There is no student enrolled in this course.</p>
     {% endif %}
 </div>
+
+    <!-- Remove Student Confirmation Modal -->
+<div id="removeStudentModal" class="modal">
+    <div class="modal-content">
+        <p>Are you sure you want to remove this student from this course?</p>
+        <div class="modal-buttons">
+            <button class="cancel-button" onclick="closeRemoveModal()">Cancel</button>
+            <button class="confirm-button" id="confirmRemoveBtn">Remove</button>
+        </div>
+    </div>
+</div>
+
+
+    <script>
+    let selectedForm = null;
+
+    // Attach event listener to all remove student forms
+    document.addEventListener('DOMContentLoaded', function () {
+        const forms = document.querySelectorAll('form[action*="remove_student"]');
+        forms.forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();  // Prevent immediate submission
+                selectedForm = form;     // Store which form triggered it
+                openRemoveModal();       // Open the styled confirmation modal
+            });
+        });
+
+        document.getElementById('confirmRemoveBtn').addEventListener('click', function () {
+            if (selectedForm) {
+                selectedForm.submit();   // Submit if user confirms
+            }
+        });
+    });
+
+    function openRemoveModal() {
+        document.getElementById('removeStudentModal').style.display = 'flex';
+    }
+
+    function closeRemoveModal() {
+        document.getElementById('removeStudentModal').style.display = 'none';
+        selectedForm = null;
+    }
+</script>
+
 {% endblock %}

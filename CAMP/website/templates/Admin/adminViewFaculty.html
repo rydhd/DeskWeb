@@ -21,7 +21,7 @@
     }
 
     .table-responsive {
-        max-height: 800px;  
+        max-height: 700px;
         overflow-y: auto;  /* Enable vertical scrolling when content exceeds the max height */
         width: 1500px;  /* Set a fixed width for the table container */
     }
@@ -120,8 +120,9 @@
     }
 
     .add-faculty-container {
-        margin-left: 15px;  /* Add a margin to the left of the button container */
-        margin-top: 1rem;  /* Add space above the button */
+        position: absolute;
+        bottom: 50px;
+        right: 110px;
         display: flex;  /* Use flexbox for alignment */
         justify-content: flex-start;  /* Align the button to the left */
     }
@@ -325,7 +326,7 @@
                         </div>
                         <div class="form-group">
                             <label for="password">Password:</label>
-                            <input type="password" id="password" name="password" required maxlength="10">
+                            <input type="password" id="password" name="password" required maxlength="50" minlength="8">
                         </div>
                     </div>
                 </div>

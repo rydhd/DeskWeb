@@ -24,8 +24,8 @@
     
     /* Red square container */
     .overall-container {
-        width: 550px; 
-        height: 200px; 
+        width: 287px;
+        height: 200px;
         background-color: #8d0404;
         color: white;
         display: flex;
@@ -36,10 +36,10 @@
         font-weight: bold;
         text-transform: uppercase;
         border-radius: 8px;
-        margin-right: 3rem;
         padding: 2rem;
         box-sizing: border-box; /* Ensures padding doesn't affect width/height */
         text-align: center; /* Center the text */
+
     }
 
 
@@ -84,26 +84,21 @@
     
     /* Wrapper for Red Square and Evaluation Cards */
     .overall-evaluations-wrapper {
-        display: flex; 
-        align-items: flex-start; 
+        display: flex;
+        align-items: flex-start;
         margin-bottom: 2rem;
     }
 
-    /* Red Square Container Wrapper */
-    .overall-container-wrapper {
-        flex-shrink: 0;
-        margin-right: 2rem; 
-    }
-
-    /* Evaluations Container */
+     /* Evaluations Container */
     .evaluations-container {
         flex: 0 0 1030px;
-        height: 700px;         
+        height: 700px;          /* Set a fixed height */
         width: 100%;
-        overflow-y: auto;   
+        overflow-y: auto;       /* Enable vertical scrollbar when needed */
         padding: 10px;
-    
-    } 
+        margin-left: 3rem;
+
+    }
 
     /* Scrollbar Styles */
     .evaluations-container::-webkit-scrollbar {
@@ -111,7 +106,7 @@
         }
 
     .evaluations-container::-webkit-scrollbar-track {
-        
+
         border-radius: 5px;
         }
 
@@ -119,19 +114,19 @@
         background: #8d0404;
         
         }
-            
-    
-    .evaluation-card {
-        position: relative;
-        display: flex;
-        align-items: center;
-        background-color: #fff;
-        border: 1px solid #ccc;
-        padding: 1rem;
-        padding-left: 2rem;
-        width: 1100px;
-        box-sizing: border-box;
-    }
+
+        .evaluation-card {
+            position: relative;
+            display: flex;
+            align-items: flex-start; /* Align items to the top */
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 1rem;
+            width: 1000px;
+            box-sizing: border-box;
+            max-width: 1000px;
+        }
+
 
     .profile-pic {
             width: 80px;
@@ -218,7 +213,7 @@
     .rating-frequency-container {
         position: absolute;
         top: 300px;
-        width: 221px; 
+        width: 221px;
         height: 150px; 
         background-color: #fff;
         border: 1px solid #8d0404;
@@ -337,7 +332,7 @@
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
         <script>
             const ratingFrequencies = {{ rating_frequencies | tojson }}; // Pass data from backend
-        
+
 
             const ctx = document.getElementById('ratingFrequencyChart').getContext('2d');
             const chart = new Chart(ctx, {
@@ -405,7 +400,16 @@
                             }
                         },
                         datalabels: {
-                            display: false // Disable data labels
+                            anchor: 'end',
+                            align: 'end',
+                            color: '#000',
+                            font: {
+                                weight: 'bold',
+                                size: 14
+                            },
+                            formatter: function(value) {
+                                return value; // shows the count at the end of each bar
+                            }
                         }
                     }
                 }
@@ -421,8 +425,13 @@
                         <!-- Evaluation Card -->
                         <div class="evaluation-card">
                             <!-- Vertical Line -->
-        
-                            <img src="{{ url_for('static', filename=evaluation[4] if evaluation[4]) }}" alt=" " class="profile-pic">
+
+                            {% if evaluation[4] %}
+                                <img src="{{ url_for('views.profile_pictures', filename=evaluation[4]) }}" alt="Profile Picture" class="profile-pic">
+                            {% else %}
+                                <img src="{{ url_for('views.profile_pictures', filename='student_default.png') }}" alt="Default Profile Picture" class="profile-pic">
+                            {% endif %}
+
                             <div class="evaluation-content">
                                 <p class="student-name">{{ evaluation[0] }}</p> <!-- Student Name -->
                                 <p class="comment">{{ evaluation[2] }}</p> <!-- Comment -->

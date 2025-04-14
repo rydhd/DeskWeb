@@ -101,7 +101,7 @@
         /* Styling for the camera icon */
         .camera-icon {
             background: rgba(255, 255, 255, 0.1); /* Light overlay on background */
-            color: #8d0404; /* Dark red color */
+            color: white; /* Dark red color */
             border-radius: 50%; /* Circular shape */
             width: 40px;
             height: 40px;
@@ -116,8 +116,8 @@
 
         /* Change background and icon color on hover */
         .camera-icon:hover {
-            background-color: #8d0404; /* Dark red background */
-            color: white; /* White icon color */
+            background-color: white; /* Dark red background */
+            color: #8d0404; /* White icon color */
         }
 
         /* Hide the file input element */
@@ -127,7 +127,7 @@
 
         /* Style for the student name */
         .profile-name {
-            font-size: 24px; /* Larger font size */
+            font-size: 35px; /* Larger font size */
             font-weight: bold; /* Bold text */
             color: #8d0404; /* Dark red color */
             margin-bottom: 5px; /* Add space below */
@@ -135,7 +135,7 @@
 
         /* Style for the student ID */
         .profile-id {
-            font-size: 16px; /* Normal font size */
+            font-size: 20px; /* Normal font size */
             color: #8d0404; /* Dark red color */
         }
 
@@ -194,7 +194,6 @@
             color: white; /* White text */
             border: none; /* No border */
             padding: 5px 10px; /* Button padding */
-            border-radius: 4px; /* Rounded corners */
             cursor: pointer; /* Pointer cursor */
             font-size: 14px; /* Font size */
         }
@@ -202,8 +201,9 @@
         /* Specific styles for the Update button */
         .update-button {
             width: 120px; /* Fixed width */
-            margin-left: 400px; /* Shift to the right */
-            margin-top: 50px; /* Add space above */
+            position: absolute;
+            top: 570px;
+            right: 40px;
         }
 
         /* Change button background color on hover */
@@ -245,7 +245,6 @@
         .modal-buttons button {
             padding: 10px 20px; /* Button size */
             border: none; /* No border */
-            border-radius: 6px; /* Rounded corners */
             cursor: pointer; /* Pointer cursor */
             font-size: 14px; /* Normal font size */
         }
@@ -339,7 +338,11 @@
             <div class="profile-top">
                 <!-- Profile picture wrapper -->
                 <div class="profile-picture-wrapper">
-                    <img src="{{ url_for('static', filename=student[12] if student[12]) }}" alt=" " class="profile-picture"> <!-- Display profile picture -->
+                    {% if student[12] %}
+                        <img src="{{ url_for('views.profile_pictures', filename=student[12]) }}" alt="Profile Picture" class="profile-picture">
+                    {% else %}
+                        <img src="{{ url_for('views.profile_pictures', filename='student_default.png') }}" alt="Default Profile Picture" class="profile-picture">
+                    {% endif %}
                     <form action="{{ url_for('admin.upload_student_picture', student_id=student[0]) }}" method="POST" enctype="multipart/form-data" class="camera-upload-form"> <!-- Form to upload new profile picture -->
                         <label for="profile-picture-input" class="camera-icon">
                             <i class="fas fa-camera"></i> <!-- Camera icon for uploading -->

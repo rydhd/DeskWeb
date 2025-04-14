@@ -135,33 +135,33 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% if students %}
+                    {% if students and students[0][0] is not none %}
                         {% for student in students %}
                         <tr>
                             <form method="POST" action="/faculty/submit_grades" onsubmit="console.log('Form is being submitted');">
                                 <td>AU00{{ student[0] }}</td> <!-- Student ID -->
                                 <td>{{ student[1] }}, {{ student[2] }} {{ student[3] }}</td> <!-- Student Name -->
                                 <td>
-                                    <input type="number" class="form-control written-works" name="written_works" 
-                                           value="{{ student[8] or '' }}" max="200" 
+                                    <input type="number" class="form-control written-works" name="written_works"
+                                           value="{{ student[8] or '' }}" max="200"
                                            {% if student[8] is not none %}readonly{% endif %} required>
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control final-project" name="final_project" 
-                                           value="{{ student[9] or '' }}" max="100" 
+                                    <input type="number" class="form-control final-project" name="final_project"
+                                           value="{{ student[9] or '' }}" max="100"
                                            {% if student[9] is not none %}readonly{% endif %} required>
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control exams" name="exams" 
-                                           value="{{ student[10] or '' }}" max="150" 
+                                    <input type="number" class="form-control exams" name="exams"
+                                           value="{{ student[10] or '' }}" max="150"
                                            {% if student[10] is not none %}readonly{% endif %} required>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control raw-grade" name="raw_grade" 
+                                    <input type="text" class="form-control raw-grade" name="raw_grade"
                                            value="{{ student[6] or '' }}" readonly>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control final-grade" name="final_grade" 
+                                    <input type="text" class="form-control final-grade" name="final_grade"
                                            value="{{ student[7] or '' }}" readonly>
                                 </td>
                                 <td>
@@ -169,7 +169,7 @@
                                     <input type="hidden" name="course_id" value="{{ course_id }}">
                                     <input type="hidden" name="action" value="submit"> <!-- Default action is "submit" -->
                                     {% if student[8] is not none and student[9] is not none and student[10] is not none %}
-                                        <button type="button" class="update-btn btn btn-warning" 
+                                        <button type="button" class="update-btn btn btn-warning"
                                                 onclick="enableEditing(this)">Update</button>
                                     {% else %}
                                         <button type="submit" class="submit-btn btn btn-primary">Submit</button>

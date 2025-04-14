@@ -268,11 +268,18 @@
     <div class="red-header"></div>
 
     <!-- Profile Section -->
+
     <div class="profile-wrapper">
         <div class="profile-picture-wrapper">
-            <img src="{{ url_for('static', filename=session.get('student_picture', 'default-profile.jpg')) }}"
-                 alt="Profile Picture"
-                 class="profile-picture">
+            {% if session.get('profile_picture') %}
+                <img src="{{ url_for('views.profile_pictures', filename=session['student_picture']) }}"
+                     alt="Profile Picture"
+                     class="profile-picture">
+            {% else %}
+                <img src="{{ url_for('views.profile_pictures', filename='student_default.png') }}"
+                     alt="Profile Picture"
+                     class="profile-picture">
+            {% endif %}
 
             <!-- Camera Upload Form -->
             <form action="{{ url_for('student.upload_student_picture', student_id=session.get('student_id')) }}"

@@ -24,12 +24,11 @@
         color: #8d0404; /* Set the text color to white */
         font-weight: normal; /* Make the text weight normal*/
         padding: 0.2rem 1.2rem; /* Add padding for a comfortable button size */
-        border-radius: 5px; /* Round the button corners */
         cursor: pointer; /* Change cursor on hover to indicate clickability */
         transition: transform 0.15s ease-in-out; /* Add smooth scaling effect on hover */
         position: absolute; /* Position the button absolutely */
         right: 100px;  
-        top: 60px;
+        top: 690px;
 
     }
 
@@ -196,7 +195,8 @@
     .form-actions {
         text-align: center;
         padding: 10px 0; /* Reduce vertical padding for the submit button */
-        margin-top: 10px; /* Reduce spacing above the submit button */
+        margin-top: 5px; /* Reduce spacing above the submit button */
+
     }
 
     .form-actions button {
@@ -204,9 +204,9 @@
         color: white;
         padding: 0.5rem 1rem;
         border: none;
-        border-radius: 10px;
         cursor: pointer;
         font-weight: normal;
+         margin-bottom: 40px;
     }
 
     .form-actions button:hover {
@@ -298,7 +298,7 @@
 
     <div class="mb-4">
         <!-- Button for navigating to the course application page -->
-        <a href="{{ url_for('student.apply_course') }}" class="apply-btn">Apply for Course</a>
+        <a href="{{ url_for('student.apply_course') }}" class="apply-btn">Course Enlistment</a>
     </div>
 
     <!-- Check if courses are available (non-empty) -->
