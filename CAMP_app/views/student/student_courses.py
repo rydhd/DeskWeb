@@ -20,7 +20,7 @@ class StudentCoursesTab(tk.Frame):
         self.style.configure("Custom.TLabel", font=("Lexend Deca", 20, "bold"), foreground="#8D0404")
 
         self.lbl = ttk.Label(self, text="COURSES", style="Custom.TLabel")
-        self.lbl.grid(row=0, column=0, columnspan=3, pady=10,padx=10)
+        self.lbl.grid(row=0, column=0, columnspan=3, pady=8,padx=10)
 
         style = ttk.Style()
         style.configure("Treeview", rowheight=30, font=("Lexend Deca", 10, "bold"))
