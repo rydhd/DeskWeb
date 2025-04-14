@@ -25,7 +25,7 @@ class FacultyEvaluation(tk.Frame):
         star_path = self.IMAGES_DIR / "Star.png"
         star = Image.open(star_path)
         # Big star
-        big_star = star.resize((26, 26), Image.Resampling.LANCZOS)
+        big_star = star.resize((22, 22), Image.Resampling.LANCZOS)
         self.big_star = ImageTk.PhotoImage(big_star)
         # Small start
         star = star.resize((12, 12), Image.Resampling.LANCZOS)
@@ -60,12 +60,12 @@ class FacultyEvaluation(tk.Frame):
                                      fill="#FFFFFF", anchor=tk.NW)
 
         # Evaluation Rating
-        self.overall_eval_canvas.create_text(30, 30, text=avg_eval_rating,
+        self.overall_eval_canvas.create_text(40, 30, text=avg_eval_rating,
                                              font=("Lexend Deca", 16, "bold"),
                                              fill="#FFFFFF", anchor=tk.NW)
 
         # Star
-        self.overall_eval_canvas.create_image(80, 30, image=self.big_star, anchor=tk.NW)
+        self.overall_eval_canvas.create_image(90, 34, image=self.big_star, anchor=tk.NW)
 
         # Total eval
         self.overall_eval_canvas.create_text(36, 70, text=f"{total_evaluations} EVALUATIONS",
@@ -168,10 +168,8 @@ class FacultyEvaluation(tk.Frame):
                                                       card=eval_card: self.delete_evaluation(eval_id, card))
                 delete_btn.place(x=584, y=0)  # Adjusted x position to fit within card
         else:
-            empty_lbl = tk.Label(scrollable_frame, text="No evaluations yet.",
-                                 font=("Lexend Deca", 12, "italic"),
-                                 bg="#D9D9D9")
-            empty_lbl.pack(pady=20)
+            tk.Label(self, text="No evaluations at the moment.", font=("Lexend Deca", 10, "bold"),
+                     bg="#D9D9D9").place(relx=0.5, rely=0.25, anchor="center")
 
         # Unbind mouse wheel when leaving the canvas area
         def _leave_canvas(event):

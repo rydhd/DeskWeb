@@ -82,7 +82,6 @@ class FacultyLogIn(tk.Frame):
 
         # self.short_cut() # NOTE: Remove this
 
-
     def log_in(self, event=None):
         faculty_username = self.faculty_username_entry.get().strip()
         faculty_password = self.faculty_password_entry.get().strip()

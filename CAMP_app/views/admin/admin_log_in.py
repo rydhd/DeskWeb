@@ -127,6 +127,6 @@ class AdminLogIn(tk.Frame):
         self.admin_password_entry.delete(0, tk.END)
 
     def short_cut(self): # NOTE: Remove this
-        self.admin_username_entry.insert("", "emmantest")
-        self.admin_password_entry.insert("", "emman123")
+        self.admin_username_entry.insert("", "adminjay")
+        self.admin_password_entry.insert("", "adminjay")
         self.log_in()

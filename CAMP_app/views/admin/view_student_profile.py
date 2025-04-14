@@ -394,7 +394,8 @@ class ViewStudentProfile(tk.Toplevel):
         if confirm:
             self.main.admin_model.expel_student(self.student_data["stu_id"])
             self.admin_dashboard.display_students()
-            search_bar = self.admin_dashboard.search
+            self.admin_dashboard.display_data()
+            search_bar = self.admin_dashboard.search_entry
             if search_bar.get():
                 search_bar.delete("0", tk.END)
                 search_bar.focus_set()

@@ -57,12 +57,12 @@ class FacultyLanding(tk.Toplevel):
         self.sidebar_canvas.create_image(20, 20, image=self.camp_logo, anchor=tk.NW)
 
         # Faculty username
-        icon_faculty_path = self.IMAGES_DIR / "ProfileIcon.png"
+        icon_faculty_path = self.IMAGES_DIR / "FacultyIcon.png"
         icon_faculty = Image.open(icon_faculty_path)
-        icon_faculty = icon_faculty.resize((50, 50), Image.Resampling.LANCZOS)
+        icon_faculty = icon_faculty.resize((70, 70), Image.Resampling.LANCZOS)
         self.icon_faculty = ImageTk.PhotoImage(icon_faculty)
-        self.sidebar_canvas.create_image(45, 90, image=self.icon_faculty, anchor=tk.NW)
-        self.sidebar_canvas.create_text(55, 145, text=self.faculty_session["fac_username"], font=("Lexend Deca", 10, "bold"),
+        self.sidebar_canvas.create_image(35, 80, image=self.icon_faculty, anchor=tk.NW)
+        self.sidebar_canvas.create_text(36, 145, text=self.faculty_session["fac_username"], font=("Lexend Deca", 10, "bold"),
                                         fill="#FFFFFF", anchor=tk.NW)
         self.sidebar_canvas.create_text(50, 167, text="FACULTY", font=("Lexend Deca", 6), fill="#FFFFFF", anchor=tk.NW)
 

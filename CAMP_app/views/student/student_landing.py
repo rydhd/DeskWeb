@@ -75,13 +75,13 @@ class StudentLanding(tk.Toplevel):
         self.sidebar_canvas.create_image(20, 20, image=self.camp_logo, anchor=tk.NW)
 
         # Student username
-        icon_student_path = self.IMAGES_DIR / "ProfileIcon.png"
+        icon_student_path = self.IMAGES_DIR / "StudentIcon.png"
         icon_student = Image.open(icon_student_path)
-        icon_student = icon_student.resize((50, 50), Image.Resampling.LANCZOS)
+        icon_student = icon_student.resize((70, 70), Image.Resampling.LANCZOS)
         self.icon_student = ImageTk.PhotoImage(icon_student)
-        self.sidebar_canvas.create_image(45, 90, image=self.icon_student, anchor=tk.NW)
-        self.sidebar_canvas.create_text(80, 150, text=self.student_session["stu_full_name"], font=("Lexend Deca",8),
-                                        fill="#FFFFFF", anchor="center")
+        self.sidebar_canvas.create_image(35, 80, image=self.icon_student, anchor=tk.NW)
+        self.sidebar_canvas.create_text(32, 145, text=self.student_session["stu_full_name"], font=("Lexend Deca",8),
+                                        fill="#FFFFFF", anchor=tk.NW)
         self.sidebar_canvas.create_text(55, 159, text="Student", font=("Lexend Deca",6) , fill="#FFFFFF", anchor=tk.NW)
 
         self.button_images = {

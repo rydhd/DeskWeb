@@ -13,8 +13,8 @@ class AdminLanding(tk.Toplevel):
         super().__init__()
         self.main = main
         self.admin_session = admin_session
-        self.protocol("WM_DELETE_WINDOW", self.on_close)
 
+        self.protocol("WM_DELETE_WINDOW", self.on_close)
         self.title("Admin Landing")
         self.geometry("1000x600+120+20")
         self.resizable(False, False)
@@ -47,15 +47,15 @@ class AdminLanding(tk.Toplevel):
         admin_faculty_frame = None
 
         for CF in self.content_frames:
-            if CF.__name__ == "AdminFaculty":
-                # Initialize AdminFaculty first
+            if CF.__name__ == "AdminDashboard":
                 frame = CF(self.main_frame, self.main, self)
+                admin_dashboard = frame
+            elif CF.__name__ == "AdminFaculty":
+                frame = CF(self.main_frame, self.main, self, admin_dashboard)
                 admin_faculty_frame = frame
             elif CF.__name__ == "AdminCourses":
-                # Pass the AdminFaculty frame to AdminCourses
                 frame = CF(self.main_frame, self.main, self, admin_faculty_frame)
             else:
-                # Normal initialization
                 frame = CF(self.main_frame, self.main, self)
 
             self.dict_frames[CF.__name__] = frame
@@ -78,11 +78,11 @@ class AdminLanding(tk.Toplevel):
         self.sidebar_canvas.create_image(20, 20, image=self.camp_logo, anchor=tk.NW)
 
         # Admin username
-        icon_admin_path = self.IMAGES_DIR / "ProfileIcon.png"
+        icon_admin_path = self.IMAGES_DIR / "AdminIcon.png"
         icon_admin = Image.open(icon_admin_path)
-        icon_admin = icon_admin.resize((50,50), Image.Resampling.LANCZOS)
+        icon_admin = icon_admin.resize((70, 70), Image.Resampling.LANCZOS)
         self.icon_admin = ImageTk.PhotoImage(icon_admin)
-        self.sidebar_canvas.create_image(45, 90, image=self.icon_admin, anchor=tk.NW)
+        self.sidebar_canvas.create_image(35, 80, image=self.icon_admin, anchor=tk.NW)
         self.sidebar_canvas.create_text(36, 145, text=self.admin_session["adm_username"], font=("Lexend Deca", 10, "bold"), fill="#FFFFFF", anchor=tk.NW)
         self.sidebar_canvas.create_text(55, 167, text="ADMIN", font=("Lexend Deca", 6) , fill="#FFFFFF", anchor=tk.NW)
 
