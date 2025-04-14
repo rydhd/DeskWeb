@@ -129,7 +129,7 @@ class ViewFacultyStudents(tk.Toplevel):
             if hasattr(self, 'faculty_stu_list'):
                 self.faculty_stu_list.destroy()
 
-            tk.Label(self, text="No student enrolled at the moment", font=("Lexend Deca", 10, "bold")).place(relx=0.5,rely=0.5, anchor="center")
+            tk.Label(self, text="No students enrolled at the moment.", font=("Lexend Deca", 10, "bold")).place(relx=0.5,rely=0.5, anchor="center")
 
     def remove_student(self, event):
         selected_row = self.faculty_stu_list.identify_row(event.y)

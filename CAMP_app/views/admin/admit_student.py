@@ -23,7 +23,7 @@ class AdmitStudent(tk.Toplevel):
             "Middle Name": 20,
             "Last Name": 50,
             "Username": 50,
-            "Password": 10,
+            "Password": 50,
             "Phone": 11,
             "LRN": 12,
             "Citizenship": 30,
@@ -407,11 +407,11 @@ class AdmitStudent(tk.Toplevel):
                 data["Address"],
             )
             messagebox.showinfo("Success", "Student admitted successfully!")
+            self.admin_dashboard.display_data()
             self.clear_fields()
 
     def admit_student(self, first_name, middle_name, last_name, birth_date, sex, username, password, phone_number, lrn, citizenship, email, religion, address):
         self.main.admin_model.admit_student(first_name, middle_name, last_name, birth_date, sex, username, password, phone_number, lrn, citizenship, email, religion, address)
-        self.admin_dashboard.display_students()
 
     def clear_fields(self):
         self.first_name.delete(0, tk.END)

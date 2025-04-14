@@ -3,9 +3,11 @@ from tkinter import messagebox, font
 
 
 class AddFaculty(tk.Toplevel):
-    def __init__(self, parent, main):
+    def __init__(self, parent, main, admin_dashboard, admin_faculty):
         super().__init__(parent)
         self.main = main
+        self.admin_dashboard = admin_dashboard
+        self.admin_faculty = admin_faculty
         self.protocol("WM_DELETE_WINDOW", self.close)
 
         self.title("Add Faculty")
@@ -144,22 +146,6 @@ class AddFaculty(tk.Toplevel):
         )
         self.password.place(x=252, y=184)
 
-        # Confirm password
-        tk.Label(self.main_frame, text="Confirm Password", font=lbl_font, fg="#020202", bg="#FFFFFF").place(x=250, y=214)
-        self.confirm_password = tk.Entry(
-            self,
-            width=28,
-            bg="#FFFFFF",
-            fg="#020202",
-            relief="flat",
-            highlightthickness=1,
-            highlightbackground="#020202",
-            highlightcolor="#8D0404",
-            insertbackground="#020202",
-            font=entry_font,
-        )
-        self.confirm_password.place(x=252, y=237)
-
         # Add Faculty Button
         self.add_faculty_btn = tk.Button(
             self.main_frame,
@@ -214,7 +200,6 @@ class AddFaculty(tk.Toplevel):
             "Last Name": self.last_name.get().strip(),
             "Username": self.username.get().strip(),
             "Password": self.password.get().strip(),
-            "Confirm Password": self.confirm_password.get().strip(),
             "Phone": self.phone_num.get().strip(),
             "Email": self.email.get().strip(),
         }
@@ -246,10 +231,7 @@ class AddFaculty(tk.Toplevel):
 
         # Password match and length check
         password = data["Password"]
-        confirm_password = data["Confirm Password"]
-        if password != confirm_password:
-            errors.append("Passwords do not match.")
-        elif len(password) < 8:
+        if len(password) < 8 and len(password) < 51:
             errors.append("Password must be at least 8 characters.")
 
         # Check if username is already taken
@@ -271,6 +253,8 @@ class AddFaculty(tk.Toplevel):
             )
             if result:
                 messagebox.showinfo("Success", "Faculty added successfully!")
+                self.admin_dashboard.display_data()
+                self.admin_faculty.display_faculties()
                 self.clear_fields()
             else:
                 messagebox.showerror("Error", "Failed to add faculty. Please try again.")
@@ -309,7 +293,6 @@ class AddFaculty(tk.Toplevel):
         self.last_name.delete(0, 'end')
         self.username.delete(0, 'end')
         self.password.delete(0, 'end')
-        self.confirm_password.delete(0, 'end')
         self.email.delete(0, 'end')
         self.phone_num.delete(0, 'end')
 

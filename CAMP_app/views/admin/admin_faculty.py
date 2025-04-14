@@ -6,10 +6,11 @@ from CAMP_app.views.admin.view_fac_students import ViewFacultyStudents
 
 
 class AdminFaculty(tk.Frame):
-    def __init__(self, parent, main, admin_landing):
+    def __init__(self, parent, main, admin_landing, admin_dashboard):
         super().__init__(parent)
         self.main = main
         self.admin_landing = admin_landing
+        self.admin_dashboard = admin_dashboard
 
         # Canvas
         self.faculty_canvas = tk.Canvas(self, bg="#D9D9D9", bd=0, highlightthickness=0)
@@ -108,12 +109,9 @@ class AdminFaculty(tk.Frame):
         self.add_fac_btn.config(background=new_color)
 
     def display_faculties(self):
+        for row in self.faculty_list.get_children():
+            self.faculty_list.delete(row)
         faculties = self.main.admin_model.get_faculties()
-        # for faculty in faculties:
-        #     self.faculty_list.insert("", "end", values=(f"    {faculty["fac_full_name"]}",
-        #                                                 f"AU{faculty["fac_id"]}",
-        #                                                 faculty["course_name"],
-        #                                                 "View Students"), tags=("row",))
 
         for index, faculty in enumerate(faculties):
             tag = "evenrow" if index % 2 == 0 else "oddrow"
@@ -151,6 +149,6 @@ class AdminFaculty(tk.Frame):
 
     def add_faculty(self):
         self.admin_landing.attributes("-disabled", True)
-        self.admin_landing.wait_window(AddFaculty(self.admin_landing, self.main))
+        self.admin_landing.wait_window(AddFaculty(self.admin_landing, self.main, self.admin_dashboard, self))
         self.admin_landing.attributes("-disabled", False)
         self.admin_landing.focus_force()

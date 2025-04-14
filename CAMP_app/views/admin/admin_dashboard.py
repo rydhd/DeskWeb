@@ -34,16 +34,16 @@ class AdminDashboard(tk.Frame):
         self.dashboard_canvas.create_image(440, 30, image=self.faculty_card, anchor=tk.NW)
 
         # Student count
-        self.dashboard_canvas.create_text(235,55, text=self.display_student_count(), font=("Lexend Deca", 40, "bold") ,fill="#000000",  anchor=tk.NW)
+        self.total_students = self.dashboard_canvas.create_text(235,55, text="None", font=("Lexend Deca", 40, "bold") ,fill="#020202",  anchor=tk.NW)
 
         # Female count
-        self.dashboard_canvas.create_text(120, 180, text=self.display_female_count(), font=("Lexend Deca", 18, "bold") ,fill="#000000", anchor=tk.NW)
+        self.female_count = self.dashboard_canvas.create_text(120, 180, text="None", font=("Lexend Deca", 18, "bold") ,fill="#020202", anchor=tk.NW)
 
         # Male count
-        self.dashboard_canvas.create_text(280, 180, text=self.display_male_count(), font=("Lexend Deca", 18, "bold") ,fill="#000000", anchor=tk.NW)
+        self.male_count = self.dashboard_canvas.create_text(280, 180, text="None", font=("Lexend Deca", 18, "bold") ,fill="#020202", anchor=tk.NW)
 
         # Faculty count
-        self.dashboard_canvas.create_text(645, 100, text=self.display_faculty_count(), font=("Lexend Deca", 40, "bold"),fill="#000000", anchor=tk.NW)
+        self.faculty_count = self.dashboard_canvas.create_text(645, 100, text="None", font=("Lexend Deca", 40, "bold"),fill="#020202", anchor=tk.NW)
 
         # Admit student button
         self.admit_btn = tk.Button(
@@ -139,7 +139,6 @@ class AdminDashboard(tk.Frame):
         header_frame.lift()
         self.student_list.bind("<ButtonRelease-1>", self.view_profile)  # When the user clicked the "View Profile"
 
-        self.display_students()
         self.display_data()
 
 
@@ -152,23 +151,20 @@ class AdminDashboard(tk.Frame):
 
     def display_student_count(self):
         student_count = self.main.admin_model.get_student_count()
-
-        return student_count
+        self.dashboard_canvas.itemconfig(self.total_students, text=student_count)
 
     def display_female_count(self):
         female_count = self.main.admin_model.get_female_count()
-
-        return female_count
+        self.dashboard_canvas.itemconfig(self.female_count, text=female_count)
 
     def display_male_count(self):
         male_count = self.main.admin_model.get_male_count()
-
-        return male_count
+        self.dashboard_canvas.itemconfig(self.male_count, text=male_count)
 
     def display_faculty_count(self):
         faculty_count = self.main.admin_model.get_faculty_count()
+        self.dashboard_canvas.itemconfig(self.faculty_count, text=faculty_count)
 
-        return faculty_count
     def admit_student(self):
         # self.admin_landing.sidebar_canvas.create_rectangle(0, 0, 400, 300, fill="black", stipple="gray50", outline="")
         # canvas.create_rectangle(0, 0, 400, 300, fill="black", stipple="gray50", outline="")
@@ -213,7 +209,7 @@ class AdminDashboard(tk.Frame):
         if event.type == "9":  # FocusIn
             if self.search_entry.get() == " Search by Name or ID":
                 self.search_entry.delete(0, tk.END)
-                self.search_entry.config(fg="gray")
+                self.search_entry.config(fg="#020202")
         elif event.type == "10":  # FocusOut
             if not self.search_entry.get():
                 self.search_entry.insert(0, " Search by Name or ID")

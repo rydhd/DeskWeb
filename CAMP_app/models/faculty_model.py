@@ -21,8 +21,13 @@ class FacultyModel:
         """
             cursor.execute(query, (fac_id,))
             course = cursor.fetchone()
-            cursor.close()
-            return course
+            if course:
+                cursor.close()
+                return course
+            else:
+                cursor.close()
+                return None
+
         except mysql.connector.Error as error:
             print(error)
             return None

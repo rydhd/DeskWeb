@@ -16,7 +16,7 @@ class FacultyStudents(tk.Frame):
         BASE_DIR = Path(__file__).resolve().parent.parent.parent
         ROOT_DIR = Path(__file__).resolve().parent.parent.parent.parent
         self.IMAGES_DIR = BASE_DIR / "static/images"
-        self.PFP_DIR = BASE_DIR / "static/student_pfps"
+        self.PFP_DIR = ROOT_DIR / "shared_assets/profile_pictures"
 
         self.students_canvas = tk.Canvas(self, bg="#D9D9D9", bd=0, highlightthickness=0)
         self.students_canvas.pack(fill=tk.BOTH, expand=True)
@@ -24,37 +24,43 @@ class FacultyStudents(tk.Frame):
         # Headings
         self.fac_id = self.faculty_landing.faculty_session["fac_id"]
         result = self.main.faculty_model.get_faculty_course(self.fac_id)
-        self.cou_id = result["cou_id"]
-        fac_course = result["cou_name"]
-        self.students_canvas.create_text(20, 20, text=fac_course, font=("Lexend Deca", 20, "bold"), fill="#8D0404", anchor=tk.NW)
-
-        self.create_student_list()
+        if not result:
+            tk.Label(self, text="Not assigned to a course at the moment.", font=("Lexend Deca", 10, "bold"), bg="#D9D9D9").place(relx=0.5, rely=0.25, anchor="center")
+        else:
+            self.cou_id = result["cou_id"]
+            fac_course = result["cou_name"]
+            self.students_canvas.create_text(20, 20, text=fac_course, font=("Lexend Deca", 20, "bold"), fill="#8D0404", anchor=tk.NW)
+            self.create_student_list()
 
     def create_student_list(self):
-        self.student_list_frame = tk.Frame(self, width=500, height=520, bd=0, highlightthickness=0)
-        self.student_list_frame.place(x=20, y=60)
-        self.student_list_frame.pack_propagate(False)
+        if hasattr(self, 'header_frame'):
+            self.header_frame.destroy()
+
+        if hasattr(self, 'student_list'):
+            self.student_list.destroy()
 
         # Fonts
-        header_font = font.Font(family="Lexend Deca", size=8, weight="bold")
-        row_font = font.Font(family="Lexend Deca", size=8)
+        header_font = font.Font(family="Lexend Deca", size=10, weight="bold")
+        row_font = font.Font(family="Lexend Deca", size=10)
 
-        # Fake styled header (red background, white text)
-        header_frame = tk.Frame(self.student_list_frame, bg="#8D0404")
-        header_frame.pack(fill="x")
+        # Header frame
+        self.header_frame = tk.Frame(self, bg="#8D0404", width=500, height=30)
+        self.header_frame.place(x=20, y=60)
+        self.header_frame.pack_propagate(False)
 
-        tk.Label(header_frame, text="#", fg="#FFFFFF", bg="#8D0404",
-                 font=header_font, width=5, anchor="center").pack(side="left", padx= 25)
-        tk.Label(header_frame, text="Student Name", fg="#FFFFFF", bg="#8D0404",
-                 font=header_font, width=25, anchor="center").pack(side="left", padx= 30)
-        tk.Label(header_frame, text="Student ID", fg="#FFFFFF", bg="#8D0404",
-                 font=header_font, width=15, anchor="center").pack(side="left", padx= 30)
+        # Header Labels
+        tk.Label(self.header_frame, text="", fg="#FFFFFF", bg="#8D0404",
+                 font=header_font, width=10, anchor="center").pack(side="left", padx=0)
+        tk.Label(self.header_frame, text="Student Name", fg="#FFFFFF", bg="#8D0404",
+                 font=header_font, width=28, anchor="center").pack(side="left", padx=0)
+        tk.Label(self.header_frame, text="Student ID", fg="#FFFFFF", bg="#8D0404",
+                 font=header_font, width=20, anchor="center").pack(side="left", padx=0)
 
         self.student_list = ttk.Treeview(
-            self.student_list_frame,
+            self,
             columns=("index", "stu_full_name", "stu_id"),
             show="headings",
-            height=15
+            height=24
         )
 
         # Dummy headings to satisfy Treeview internals
@@ -63,25 +69,48 @@ class FacultyStudents(tk.Frame):
         self.student_list.heading("stu_id", text="")
 
         # Define column widths and alignments
-        self.student_list.column("index", anchor="center", width=40)
-        self.student_list.column("stu_full_name", anchor="center", width=200)
-        self.student_list.column("stu_id", anchor="center", width=120)
+        self.student_list.column("index", anchor="center", width=100)
+        self.student_list.column("stu_full_name", anchor="w", width=250)
+        self.student_list.column("stu_id", anchor="center", width=148)
 
-        # Tag style for row font
-        self.student_list.tag_configure("row", font=row_font)
+        # self.student_list.tag_configure("row", font=row_font)
 
-        self.student_list.pack(fill=tk.BOTH, expand=True)
+        # Configure alternating row background colors
+        self.student_list.tag_configure("oddrow", background="#FFFFFF", font=row_font)
+        self.student_list.tag_configure("evenrow", background="#E2E1E1", font=row_font)
+
+        self.student_list.place(x=20, y=68)
+        self.header_frame.lift()
+
         self.student_list.bind("<ButtonRelease-1>", self.view_stu_profile)
 
         self.display_students()
 
     def display_students(self):
         students = self.main.faculty_model.get_students(self.fac_id)
-        i = 0
-        for student in students:
-            i+=1
-            stu_full_name = f"{student["stu_last_name"]}, {student["stu_first_name"]} {student["stu_middle_name"]}"
-            self.student_list.insert("", "end", values=(i, stu_full_name, f"AU{student["stu_id"]}"), tags=("row",))
+        if not students:
+            if hasattr(self, 'header_frame'):
+                self.header_frame.destroy()
+
+            if hasattr(self, 'student_list'):
+                self.student_list.destroy()
+
+            tk.Label(self, text="No students enrolled at the moment.", font=("Lexend Deca", 10, "bold"), bg="#D9D9D9").place(relx=0.5,rely=0.25, anchor="center")
+        else:
+            i = 0
+            for index, student in enumerate(students):
+                i += 1
+                stu_full_name = f"{student["stu_last_name"]}, {student["stu_first_name"]} {student["stu_middle_name"]}"
+                tag = "evenrow" if index % 2 == 0 else "oddrow"
+                self.student_list.insert(
+                    "",
+                    "end",
+                    values=(
+                        i,
+                        f"        {stu_full_name}",
+                        f"AU{student["stu_id"]}"),
+                    tags=(tag,)
+                )
 
     def view_stu_profile(self, event):
         selected_row = self.student_list.identify_row(event.y)
@@ -226,7 +255,7 @@ class FacultyStudents(tk.Frame):
         if hasattr(self, 'stu_grades_card'):
             self.stu_grades_card.destroy()
 
-        self.stu_grades_card = tk.Frame(self, width=300, height=230, bg="#FFFFFF", bd=0, highlightthickness=0)
+        self.stu_grades_card = tk.Frame(self, width=300, height=224, bg="#FFFFFF", bd=0, highlightthickness=0)
         self.stu_grades_card.place(x=540, y=350)
         self.stu_grades_card.grid_propagate(False)
 
@@ -249,7 +278,7 @@ class FacultyStudents(tk.Frame):
         self.written_works = tk.Entry(
             self.stu_grades_card,
             width=18,
-            bg="#F0F0F0",
+            bg="#FFFFFF",
             fg="#020202",
             relief="flat",
             highlightthickness=1,
@@ -267,7 +296,7 @@ class FacultyStudents(tk.Frame):
         self.final_project = tk.Entry(
             self.stu_grades_card,
             width=18,
-            bg="#F0F0F0",
+            bg="#FFFFFF",
             fg="#020202",
             relief="flat",
             highlightthickness=1,
@@ -285,7 +314,7 @@ class FacultyStudents(tk.Frame):
         self.examination = tk.Entry(
             self.stu_grades_card,
             width=18,
-            bg="#F0F0F0",
+            bg="#FFFFFF",
             fg="#020202",
             relief="flat",
             highlightthickness=1,
