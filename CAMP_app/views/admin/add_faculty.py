@@ -11,7 +11,7 @@ class AddFaculty(tk.Toplevel):
         self.protocol("WM_DELETE_WINDOW", self.close)
 
         self.title("Add Faculty")
-        self.geometry("480x320+420+160")
+        self.geometry("480x320+680+320")
         self.resizable(False, False)
 
         # Main frame
@@ -23,7 +23,7 @@ class AddFaculty(tk.Toplevel):
             "Middle Name": 30,
             "Last Name": 50,
             "Username": 50,
-            "Password": 10,
+            "Password": 50,
             "Phone": 11,
             "Email": 50,
         }
@@ -231,7 +231,7 @@ class AddFaculty(tk.Toplevel):
 
         # Password match and length check
         password = data["Password"]
-        if len(password) < 8 and len(password) < 51:
+        if len(password) < 8 :
             errors.append("Password must be at least 8 characters.")
 
         # Check if username is already taken

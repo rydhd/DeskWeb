@@ -10,7 +10,7 @@ class AddCourse(tk.Toplevel):
         self.protocol("WM_DELETE_WINDOW", self.close)
 
         self.title("Add Course")
-        self.geometry("510x190+400+230")
+        self.geometry("510x190+700+400")
         self.resizable(False, False)
 
         # Main frame

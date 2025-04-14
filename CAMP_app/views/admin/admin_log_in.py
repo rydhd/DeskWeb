@@ -148,7 +148,7 @@ class AdminLogIn(tk.Frame):
 
     def short_cut(self): # NOTE: Remove this
         self.admin_username_entry.insert("", "adminjay")
-        self.admin_password_entry.insert("", "adminjay")
+        self.admin_password_entry.insert("", "adminjay123")
         self.log_in()
     def toggle_password_visibility(self):
         if self.show_password_var.get():

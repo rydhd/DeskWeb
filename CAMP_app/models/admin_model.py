@@ -472,7 +472,7 @@ class AdminModel:
 
         try:
             cursor = conn.cursor()
-            query = "SELECT CONCAT(time_start, ' - ', time_end) AS time_range FROM schedule_tbl"
+            query = "SELECT DISTINCT CONCAT(time_start, ' - ', time_end) AS time_range FROM schedule_tbl"
             cursor.execute(query)
             schedule_times = [row[0] for row in cursor.fetchall()]
             return schedule_times

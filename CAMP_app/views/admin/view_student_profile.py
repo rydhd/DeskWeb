@@ -16,7 +16,7 @@ class ViewStudentProfile(tk.Toplevel):
         self.protocol("WM_DELETE_WINDOW", self.close)
 
         self.title("Student Profile")
-        self.geometry("650x480+360+100")
+        self.geometry("650x480+600+280")
         self.resizable(False, False)
 
         # Paths

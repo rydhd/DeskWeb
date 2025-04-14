@@ -22,7 +22,7 @@ class StudentLanding(tk.Toplevel):
         self.protocol("WM_DELETE_WINDOW", self.on_close)
 
         self.title("Student Landing")
-        self.geometry("1000x600+120+20")
+        self.geometry("1000x600+400+200")
         self.resizable(False, False)
         self.config(bd=0, highlightthickness=0)
         self.style = ttk.Style()

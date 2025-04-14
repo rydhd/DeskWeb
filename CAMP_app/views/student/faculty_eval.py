@@ -17,7 +17,7 @@ class FacultyEvalView(tk.Toplevel):
         self.course_name_text = course_name
         self.on_submit = on_submit
 
-        self.geometry("400x355+500+200")
+        self.geometry("400x355+740+300")
         self.title("Faculty Eval")
         self.resizable(False, False)
         self.config(bd=0, highlightthickness=0)

@@ -13,7 +13,7 @@ class CourseApplication(tk.Toplevel):
         self.on_submit = on_submit
 
         self.title("Course Application")
-        self.geometry("1000x600+120+20")
+        self.geometry("1000x600+400+200")
         self.resizable(False, False)
         self.config(bd=0, highlightthickness=0)
 

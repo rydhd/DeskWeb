@@ -25,7 +25,7 @@ class Main(tk.Tk):
         super().__init__()
 
         self.title("CAMP")
-        self.geometry("1000x600+120+20")
+        self.geometry("1000x600+400+200")
         self.resizable(False, False)
         self.config(bd=0, highlightthickness=0)
 

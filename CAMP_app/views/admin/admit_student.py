@@ -12,7 +12,7 @@ class AdmitStudent(tk.Toplevel):
         self.admin_dashboard = parent
 
         self.title("Admit Student")
-        self.geometry("932x320+155+180")
+        self.geometry("932x320+440+300")
         self.resizable(False, False)
 
         self.main_frame = tk.Frame(self, bg="#FFFFFF")

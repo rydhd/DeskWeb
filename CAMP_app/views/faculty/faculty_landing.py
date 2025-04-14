@@ -16,7 +16,7 @@ class FacultyLanding(tk.Toplevel):
         self.protocol("WM_DELETE_WINDOW", self.on_close)
 
         self.title("Faculty")
-        self.geometry("1000x600+120+20")
+        self.geometry("1000x600+400+200")
         self.resizable(False, False)
 
         # Paths
@@ -62,7 +62,7 @@ class FacultyLanding(tk.Toplevel):
         icon_faculty = icon_faculty.resize((70, 70), Image.Resampling.LANCZOS)
         self.icon_faculty = ImageTk.PhotoImage(icon_faculty)
         self.sidebar_canvas.create_image(35, 80, image=self.icon_faculty, anchor=tk.NW)
-        self.sidebar_canvas.create_text(36, 145, text=self.faculty_session["fac_username"], font=("Lexend Deca", 10, "bold"),
+        self.sidebar_canvas.create_text(40, 145, text=self.faculty_session["fac_username"], font=("Lexend Deca", 10, "bold"),
                                         fill="#FFFFFF", anchor=tk.NW)
         self.sidebar_canvas.create_text(50, 167, text="FACULTY", font=("Lexend Deca", 6), fill="#FFFFFF", anchor=tk.NW)
 

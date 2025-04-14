@@ -16,7 +16,7 @@ class AdminLanding(tk.Toplevel):
 
         self.protocol("WM_DELETE_WINDOW", self.on_close)
         self.title("Admin Landing")
-        self.geometry("1000x600+120+20")
+        self.geometry("1000x600+400+200")
         self.resizable(False, False)
 
         # Paths

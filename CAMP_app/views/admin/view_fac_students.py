@@ -16,7 +16,7 @@ class ViewFacultyStudents(tk.Toplevel):
         self.protocol("WM_DELETE_WINDOW", self.close)
 
         self.title("Faculty Students")
-        self.geometry("600x500+350+80")
+        self.geometry("600x500+640+260")
         self.resizable(False, False)
 
         # Main frame
