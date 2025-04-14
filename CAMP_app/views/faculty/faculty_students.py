@@ -86,7 +86,26 @@ class FacultyStudents(tk.Frame):
 
         self.display_students()
 
+        # Refresh Button
+        self.refresh_btn = tk.Button(
+            self,
+            width=4,
+            text="⟳",
+            bg="#8D0404",
+            fg="#FFFFFF",
+            font=("Lexend Deca", 8, "bold"),
+            activebackground="#6C0303",
+            activeforeground="#FFFFFF",
+            relief="flat",
+            cursor="hand2",
+            command=self.display_students
+        )
+        self.refresh_btn.place(x=810, y=10)
+
     def display_students(self):
+        for row in self.student_list.get_children():
+            self.student_list.delete(row)
+
         students = self.main.faculty_model.get_students(self.fac_id)
         if not students:
             if hasattr(self, 'header_frame'):

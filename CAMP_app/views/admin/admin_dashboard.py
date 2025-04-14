@@ -139,6 +139,22 @@ class AdminDashboard(tk.Frame):
         header_frame.lift()
         self.student_list.bind("<ButtonRelease-1>", self.view_profile)  # When the user clicked the "View Profile"
 
+        # Refresh Button
+        self.refresh_btn = tk.Button(
+            self,
+            width=4,
+            text="⟳",
+            bg="#8D0404",
+            fg="#FFFFFF",
+            font=("Lexend Deca", 8, "bold"),
+            activebackground="#6C0303",
+            activeforeground="#FFFFFF",
+            relief="flat",
+            cursor="hand2",
+            command=self.display_data
+        )
+        self.refresh_btn.place(x=810,y=10)
+
         self.display_data()
 
 

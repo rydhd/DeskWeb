@@ -145,8 +145,8 @@ class FacultyLogIn(tk.Frame):
         self.faculty_password_entry.delete(0, tk.END)
 
     def short_cut(self): # NOTE: Remove this
-        self.faculty_username_entry.insert("", "rdrd")
-        self.faculty_password_entry.insert("", "rd123")
+        self.faculty_username_entry.insert("", "patrickj")
+        self.faculty_password_entry.insert("", "patpat")
         self.log_in()
     def toggle_password_visibility(self):
         if self.show_password_var.get():

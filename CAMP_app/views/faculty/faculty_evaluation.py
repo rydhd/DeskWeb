@@ -34,6 +34,26 @@ class FacultyEvaluation(tk.Frame):
         self.create_evaluation_analytics()
         self.display_evaluation_list()
 
+        # Refresh Button
+        self.refresh_btn = tk.Button(
+            self,
+            width=4,
+            text="⟳",
+            bg="#8D0404",
+            fg="#FFFFFF",
+            font=("Lexend Deca", 8, "bold"),
+            activebackground="#6C0303",
+            activeforeground="#FFFFFF",
+            relief="flat",
+            cursor="hand2",
+            command=self.refresh
+        )
+        self.refresh_btn.place(x=810, y=10)
+
+    def refresh(self):
+        self.create_evaluation_analytics()
+        self.display_evaluation_list()
+
     def create_evaluation_analytics(self):
         if hasattr(self, 'overall_eval_frame'):
             self.overall_eval_frame.destroy()
@@ -81,6 +101,9 @@ class FacultyEvaluation(tk.Frame):
 
     # Evaluations list
     def display_evaluation_list(self):
+        if hasattr(self, 'scrollable_frame'):
+            self.scrollable_frame.destroy()
+
         # Main frame container
         self.evaluation_list = tk.Frame(self, width=640, height=520, bg="#D9D9D9")
         self.evaluation_list.place(x=200, y=60)
@@ -89,16 +112,16 @@ class FacultyEvaluation(tk.Frame):
         # Create a canvas with scrollbar
         canvas = tk.Canvas(self.evaluation_list, bg="#D9D9D9", bd=0, highlightthickness=0)
         scrollbar = tk.Scrollbar(self.evaluation_list, orient="vertical", command=canvas.yview)
-        scrollable_frame = tk.Frame(canvas, bg="#D9D9D9")
+        self.scrollable_frame = tk.Frame(canvas, bg="#D9D9D9")
 
         # Configure scrolling
-        scrollable_frame.bind(
+        self.scrollable_frame.bind(
             "<Configure>",
             lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
         )
 
         # Create window in canvas that will be scrollable
-        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
         canvas.configure(yscrollcommand=scrollbar.set)
 
         # Pack canvas and scrollbar
@@ -125,7 +148,7 @@ class FacultyEvaluation(tk.Frame):
 
         if evaluations:
             for index, evaluation in enumerate(evaluations):
-                eval_card = tk.Frame(scrollable_frame, height=80, width=620, bg="#FFFFFF", bd=0, relief="flat")
+                eval_card = tk.Frame(self.scrollable_frame, height=80, width=620, bg="#FFFFFF", bd=0, relief="flat")
                 eval_card.pack(fill="x", pady=2)
                 eval_card.pack_propagate(False)
 

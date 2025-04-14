@@ -91,6 +91,21 @@ class StudentProfileTab(tk.Frame,):
         )
         self.update_profile_btn.place(x=700, y=550)
 
+        self.refresh_btn = tk.Button(
+            self,
+            width=4,
+            text="⟳",
+            bg="#8D0404",
+            fg="#FFFFFF",
+            font=("Lexend Deca", 8, "bold"),
+            activebackground="#6C0303",
+            activeforeground="#FFFFFF",
+            relief="flat",
+            cursor="hand2",
+            command=self.refresh
+        )
+        self.refresh_btn.place(x=810, y=10)
+
 
     def create_profile_view(self):
         ctk.CTkLabel(self, text="My Information", font=("Lexend Deca", 18, "bold"), text_color="#8D0404").place(x=45, y=200)
@@ -327,5 +342,25 @@ class StudentProfileTab(tk.Frame,):
         self.update_profile_btn.configure(text="UPDATE PROFILE")
         self.edit_mode = False
 
+    def refresh(self):
+        student_data = self.main.student_model.get_student(self.student_session["stu_id"])
+
+        if isinstance(student_data, dict):
+            self.student_session.update(student_data)
+
+        for widget in self.widgets.values():
+            widget.destroy()
+        self.widgets.clear()
+
+        self.full_name.config(text=self.student_session.get("stu_full_name", ""))
+        self.student_id.config(text=f"AU{self.student_session.get('stu_id', '')}")
+
+        self.create_profile_view()
+
+        PFP_DIR = Path(__file__).resolve().parent.parent.parent.parent / "shared_assets/profile_pictures"
+        pfp_path = self.get_pfp_path(PFP_DIR, self.student_session["stu_id"])
+        self.pfp = self.make_pfp_circle(pfp_path)
+        self.pfp_label.configure(image=self.pfp)
+        self.pfp_label.image = self.pfp
 
 

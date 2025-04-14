@@ -102,6 +102,22 @@ class AdminFaculty(tk.Frame):
         self.add_fac_btn.bind("<Enter>", lambda e: self.add_fac_btn_hover_effect(e, True))
         self.add_fac_btn.bind("<Leave>", lambda e: self.add_fac_btn_hover_effect(e, False))
 
+        # Refresh Button
+        self.refresh_btn = tk.Button(
+            self,
+            width=4,
+            text="⟳",
+            bg="#8D0404",
+            fg="#FFFFFF",
+            font=("Lexend Deca", 8, "bold"),
+            activebackground="#6C0303",
+            activeforeground="#FFFFFF",
+            relief="flat",
+            cursor="hand2",
+            command=self.display_faculties
+        )
+        self.refresh_btn.place(x=810, y=10)
+
         self.display_faculties()
 
     def add_fac_btn_hover_effect(self, event, hover_in):

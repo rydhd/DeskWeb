@@ -26,6 +26,20 @@ class StudentScheduleTab(tk.Frame):
 
         self.display_schedule(self.student_session["stu_id"])
 
+        self.refresh_btn = tk.Button(
+            self,
+            width=4,
+            text="⟳",
+            bg="#8D0404",
+            fg="#FFFFFF",
+            font=("Lexend Deca", 8, "bold"),
+            activebackground="#6C0303",
+            activeforeground="#FFFFFF",
+            relief="flat",
+            cursor="hand2",
+            command=self.refresh_courses
+        )
+        self.refresh_btn.place(x=810, y=10)
     def format_time(self, time_value):
         if isinstance(time_value, str):
             return time_value
@@ -42,7 +56,7 @@ class StudentScheduleTab(tk.Frame):
 
     def display_schedule(self, stu_id):
         for widget in self.winfo_children():
-            if widget != self.calendar:  # Keep the calendar
+            if widget != self.calendar and widget != self.refresh_btn:
                 widget.destroy()
 
         self.lbl = ctk.CTkLabel(self, text="SCHEDULE", font=("Lexend Deca", 30, "bold"), text_color="#8D0404")
@@ -94,3 +108,5 @@ class StudentScheduleTab(tk.Frame):
 
                 row += 2
 
+    def refresh_courses(self):
+        self.display_schedule(self.student_session["stu_id"])

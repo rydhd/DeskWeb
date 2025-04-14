@@ -54,6 +54,24 @@ GROUP BY course_tbl.cou_id  -- ensures no duplicate course entries
         finally:
             conn.close()
 
+    def get_student(self, stu_id):
+        conn = self.db.get_connection()
+        if not conn:
+            raise ConnectionError("Database connection failed.")
+
+        try:
+            cursor = conn.cursor(dictionary=True)
+            query = "SELECT * FROM student_tbl WHERE stu_id = %s"
+            cursor.execute(query, (stu_id,))
+            result = cursor.fetchone()
+            return result
+        except Exception as e:
+            print(f"Error fetching student with ID {stu_id}: {e}")
+            return None
+        finally:
+            cursor.close()
+            conn.close()
+
     def update_student_info(self, updated_data, stu_id):
         try:
             conn = self.db.get_connection()

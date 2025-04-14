@@ -99,6 +99,22 @@ class AdminCourses(tk.Frame):
         self.add_course_btn.bind("<Enter>", lambda e: self.add_course_btn_hover_effect(e, True))
         self.add_course_btn.bind("<Leave>", lambda e: self.add_course_btn_hover_effect(e, False))
 
+        # Refresh Button
+        self.refresh_btn = tk.Button(
+            self,
+            width=4,
+            text="⟳",
+            bg="#8D0404",
+            fg="#FFFFFF",
+            font=("Lexend Deca", 8, "bold"),
+            activebackground="#6C0303",
+            activeforeground="#FFFFFF",
+            relief="flat",
+            cursor="hand2",
+            command=self.display_courses
+        )
+        self.refresh_btn.place(x=810, y=10)
+
         self.display_courses()
 
     def add_course_btn_hover_effect(self, event, hover_in):
@@ -106,14 +122,9 @@ class AdminCourses(tk.Frame):
         self.add_course_btn.config(background=new_color)
 
     def display_courses(self):
+        for row in self.course_list.get_children():
+            self.course_list.delete(row)
         courses = self.main.admin_model.get_courses()
-        # for course in courses:
-        #     self.course_list.insert("", "end", values=(
-        #         f"    {course["course_name"]}",
-        #         f"    {course["day_of_week"]}",
-        #         f"{course["time_start"]}-{course["time_end"]}",
-        #         f"        {course["faculty_name"]}"
-        #     ), tags=("row",))
 
         for index, course in enumerate(courses):
             tag = "evenrow" if index % 2 == 0 else "oddrow"

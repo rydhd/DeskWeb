@@ -55,6 +55,21 @@ class StudentCoursesTab(tk.Frame):
                                        text_color="white", command=self.open_course_application)
         self.apply_btn.place(x=659, y=459)
 
+        self.refresh_btn = tk.Button(
+            self,
+            width=4,
+            text="⟳",
+            bg="#8D0404",
+            fg="#FFFFFF",
+            font=("Lexend Deca", 8, "bold"),
+            activebackground="#6C0303",
+            activeforeground="#FFFFFF",
+            relief="flat",
+            cursor="hand2",
+            command=self.refresh_courses
+        )
+        self.refresh_btn.place(x=810, y=10)
+
     def display_enrolled_courses(self, stu_id):
         enrolled_courses = self.main.student_model.get_courses(stu_id)
 
