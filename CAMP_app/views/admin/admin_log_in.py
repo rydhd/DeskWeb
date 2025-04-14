@@ -2,6 +2,7 @@ import tkinter as tk
 from pathlib import Path
 from tkinter import messagebox, ttk
 from PIL import Image, ImageTk
+import customtkinter as ctk
 
 
 class AdminLogIn(tk.Frame):
@@ -47,15 +48,34 @@ class AdminLogIn(tk.Frame):
 
         self.canvas.create_text(600,250, anchor=tk.NW, text="Admin Username:", font=("Lexend Deca", 12, "bold"), fill="#FFFFFF")
 
-        self.admin_username_entry = ttk.Entry(self) # pass self
+        self.admin_username_entry = ttk.Entry(self,font=("Lexend Deca",11)) # pass self
         self.admin_username_entry.place(anchor=tk.NW, x=600, y=280, width=300, height=35)
         self.admin_username_entry.bind("<Return>", self.log_in)
 
         self.canvas.create_text(600,320, anchor=tk.NW, text="Password:", font=("Lexend Deca", 12, "bold"), fill="#FFFFFF")
 
-        self.admin_password_entry = ttk.Entry(self, show="*") # pass self
+        self.admin_password_entry = ttk.Entry(self, show="*",font=("Lexend Deca",11)) # pass self
         self.admin_password_entry.place(anchor=tk.NW, x=600, y=350, width=300, height=35)
         self.admin_password_entry.bind("<Return>", self.log_in)
+
+        self.show_password_var = tk.BooleanVar()
+        self.show_password = ctk.CTkCheckBox(
+            self,
+            text="Show Password",
+            checkbox_width=20,
+            checkbox_height=20,
+            variable=self.show_password_var,
+            command=self.toggle_password_visibility,
+            border_width=1,
+            corner_radius=0,
+            fg_color="#B92D2D",
+            hover_color="#A03030",
+            border_color="#FFFFFF",
+            text_color="#FFFFFF",
+            font=("Lexend Deca", 12, "bold"),
+            bg_color="#B92D2D"
+        )
+        self.show_password.place(x=600, y=397)
 
         style = ttk.Style()
 
@@ -77,7 +97,7 @@ class AdminLogIn(tk.Frame):
 
 
         self.log_in_btn = ttk.Button(self, text="Log In" , command=self.log_in, style='btnStyle.TButton')
-        self.log_in_btn.place(anchor=tk.NW, x=600, y=420, width=300, height=35)
+        self.log_in_btn.place(anchor=tk.NW, x=600, y=440, width=300, height=35)
         self.log_in_btn.bind("<Return>", self.log_in)
 
         self.back_btn = ttk.Button(self, text="◀", command=self.back, style='btnStyle.TButton')
@@ -130,3 +150,8 @@ class AdminLogIn(tk.Frame):
         self.admin_username_entry.insert("", "adminjay")
         self.admin_password_entry.insert("", "adminjay")
         self.log_in()
+    def toggle_password_visibility(self):
+        if self.show_password_var.get():
+            self.admin_password_entry.config(show="")
+        else:
+            self.admin_password_entry.config(show="*")
